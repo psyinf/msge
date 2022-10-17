@@ -42,6 +42,7 @@ if(WIN32)
 endif ()
 
 add_subdirectory(src/core)
+add_subdirectory(src/taskEngine)
 
 add_subdirectory(src/examples)
 
