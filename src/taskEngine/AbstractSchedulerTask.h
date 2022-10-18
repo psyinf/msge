@@ -18,8 +18,8 @@ struct TaskProperties
 
 class AbstractSchedulerTask{
 public:
-    explicit AbstractSchedulerTask(TaskProperties const& taskProperties)
-        : taskProperties(taskProperties)
+    explicit AbstractSchedulerTask(TaskProperties&& taskProperties)
+        : taskProperties(std::move(taskProperties))
     {
     }
     virtual ~AbstractSchedulerTask()               = default;
@@ -30,8 +30,14 @@ public:
         return taskProperties;
     }
 
-protected:
-    const TaskProperties taskProperties;
+
+    TaskProperties& getProperties() 
+    {
+        return taskProperties;
+    }
+
+private:
+    TaskProperties taskProperties;
     
 };
 	

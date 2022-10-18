@@ -20,6 +20,9 @@ target_link_libraries(${LIB_NAME}
 	PUBLIC	
 		glog::glog
 		gmtl::gmtl
+		
+	PRIVATE
+		${PROJECT_NAMESPACE}::taskEngine
 )
 target_include_directories(${LIB_NAME}
 	INTERFACE

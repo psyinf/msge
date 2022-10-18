@@ -11,18 +11,20 @@
 
 using namespace msge;
 
-void BasicScheduler::run() //TODO: const/mutable
+void BasicScheduler::run() 
 {
+    using Clock = std::chrono::high_resolution_clock;
 
-    FrameStamp                     f = {0u, std::chrono::milliseconds(16)};
+
     
     const auto                     launch_mode = std::launch::async | std::launch::deferred;
     std::vector<std::future<void>> scheduled_tasks;
+    SchedulerRunInfo               lastRunInfo;
 
-    //TODO: while running
-    while (true)
+    while (isRunning)
     {
-
+        auto       frame_start = Clock::now();
+        FrameStamp f = {frameNumber, std::chrono::milliseconds(16)};
         while (taskQueue->hasNext())
         {
             auto& task       = taskQueue->getNext();
@@ -31,9 +33,22 @@ void BasicScheduler::run() //TODO: const/mutable
         }
 
         std::ranges::for_each(scheduled_tasks, [](auto& future) { future.get(); });
+        
+            
         scheduled_tasks.clear();
         taskQueue->restartIndex();
+       
+        auto frame_end = Clock::now();
+        //auto frame_length = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::duration( - frame_start));
+
+        auto runInfo = SchedulerRunInfo{frameNumber, {frame_start, frame_end}, lastRunInfo.frameTiming };
+        lastRunInfo.frameTiming = runInfo.frameTiming;
+
+     
+        onFrameEnd(runInfo);
+
     }
+    std::cout << "Finished running " << std::endl;
     
 }
 
@@ -42,8 +57,21 @@ void BasicScheduler::setTaskQueue(std::shared_ptr<AbstractTaskQueue> taskQueue)
     this->taskQueue = taskQueue;
 }
 
-void BasicScheduler::onFrameEnd(SchedulerRunInfo)
+void BasicScheduler::onFrameEnd(const SchedulerRunInfo& sri)
 {
-    taskQueue->restartIndex();
+    ++frameNumber;
+    
+
+    AbstractScheduler::onFrameEnd(sri);
+}
+
+void BasicScheduler::stop()
+{
+    isRunning = false;
+}
+
+void BasicScheduler::start()
+{
+    isRunning = true;
 }
 

@@ -1,5 +1,6 @@
 #include "BasicScheduler.h"
-#include "AbstractTaskQueue.h"
+#include "ArrayTaskQueue.h"
+#include "FrameStamp.h"
 
 #include <algorithm>
 #include <exception>
@@ -13,89 +14,84 @@ using namespace msge;
 class TestTaskA : public AbstractSchedulerTask
 {
 public:
-   explicit TestTaskA(const std::string& id) 
-        : AbstractSchedulerTask(TaskProperties{id, false})
+   explicit TestTaskA(TaskProperties&& properties ) 
+        : AbstractSchedulerTask(std::move(properties))
     {
-        
     }
 
 
     void run(const FrameStamp& frameStamp) override
     {
-        std::cout << "Running " << std::quoted(taskProperties.taskId) << std::endl; 
+        std::cout << std::format("Running {}\n", getProperties().taskId);
+        std::this_thread::sleep_for(std::chrono::milliseconds(150));
     }
 };
-
-
-class ArrayJobQueue : public AbstractTaskQueue
+//task that unschedules itself after a number of frames 
+class TestTaskB : public AbstractSchedulerTask
 {
-    std::vector<Task::element_type*> running_tasks;
-    std::vector<Task>                scheduled_tasks;
-    std::vector<TaskId>                removed_tasks;
-    std::atomic_size_t queue_iter = 0 ;
-
 public:
-    ArrayJobQueue() = default;
-    void addTask(Task&& task) override
+    explicit TestTaskB(TaskProperties&& properties)
+        : AbstractSchedulerTask(std::move(properties))
     {
-        scheduled_tasks.emplace_back(std::move(task));
     }
 
-    void removeTask(TaskId taskId) override
-    {
-        removed_tasks.push_back(taskId);
-    }
 
-    AbstractSchedulerTask& getNext() override
+    void run(const FrameStamp& frameStamp) override
     {
-        if (hasNext())
+        std::cout << std::format("Running {}\n", getProperties().taskId);
+        if (frameStamp.frameNumber == 100)
         {
-            return *running_tasks.at(queue_iter++);
+            std::this_thread::sleep_for(std::chrono::milliseconds(250));
+            std::cout << std::format("Ending and unscheduling {}\n", getProperties().taskId);
+            getProperties().reschedule = false;
         }
-        throw std::out_of_range("No next task");
-    }
-
-    size_t queueLength() const override
-    {
-        return running_tasks.size();
-    }
-
-    size_t queueRemaining() const override
-    {
-        if (queue_iter > queueLength())
-        {
-            return 0;
-        }
-        return queueLength() -queue_iter;
-    }
-
-    bool hasNext() const override
-    {
-        return queueRemaining() > 0;
-    }
-
-    void restartIndex() override
-    {
-        queue_iter = 0;
-        running_tasks.clear();
-        std::ranges::for_each(scheduled_tasks, [this](auto& t) { running_tasks.push_back(t.get()); });
-        //remove all that are not rescheduled
-        //erase pattern: std::ranges::remove_if(scheduled_tasks, [](auto& t) { return !t->getProperties().reschedule; });
-        //remove deleted    
     }
 };
 
+void onFrameEnd(const SchedulerRunInfo& runInfo)
+{
+    std::cout << std::format("-----------# {:05d}\n", runInfo.frameNumber);
+    //std::cout << runInfo.lastFrameDuration << "\n";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.getDuration()) << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(runInfo.frameTiming.timeBetweenFrames(runInfo.previousFrameTiming)) << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.totalFrameTime(runInfo.previousFrameTiming)) << ")\n";
+    
+
+}
 
 int main(int argc, char** argv)
 try
 {
    
     msge::BasicScheduler scheduler; 
-    auto                 ajq = std::make_shared<ArrayJobQueue>();
+    auto                 ajq = std::make_shared<msge::ArrayTaskQueue>();
     scheduler.setTaskQueue(ajq);
-    ajq->addTask(std::make_unique<TestTaskA>("A"));
+
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"A", true}));
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"B", true}));
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"C", true}));
+
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"D", false}));
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"X", true}));
+
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"A1", true}));
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"B1", true}));
+    ajq->addTask(std::make_unique<TestTaskA>(TaskProperties{"C1", true}));
+
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"Ax1", true}));
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"Bx1", true}));
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"Cx1", true}));
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"Ax2", true}));
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"Bx2", true}));
+    ajq->addTask(std::make_unique<TestTaskB>(TaskProperties{"Cx2", true}));
+    scheduler.start();
+    scheduler.setFrameEndCallback(&onFrameEnd);
+    
+    auto s = std::jthread([&]{ std::this_thread::sleep_for(std::chrono::seconds(60)); scheduler.stop(); });
     
     scheduler.run();
+    
+    
 
     return 0;
 

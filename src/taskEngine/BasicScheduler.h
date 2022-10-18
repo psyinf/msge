@@ -12,10 +12,17 @@ public:
 
     void setTaskQueue(std::shared_ptr<AbstractTaskQueue> taskQueue) override;
 
-    void onFrameEnd(SchedulerRunInfo) override;
+    void onFrameEnd(const SchedulerRunInfo&) override;
+
+
+    void stop() override;
+
+    void start() override;
 
 private:
-    std::shared_ptr<AbstractTaskQueue> taskQueue;
+    std::shared_ptr<AbstractTaskQueue>  taskQueue;
+    std::atomic_bool                    isRunning{false};
+    std::uint32_t                       frameNumber{0};
 };
 
 	
