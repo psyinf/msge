@@ -34,17 +34,16 @@ void BasicScheduler::run()
 
         std::ranges::for_each(scheduled_tasks, [](auto& future) { future.get(); });
         
-            
-        scheduled_tasks.clear();
+        
         taskQueue->restartIndex();
        
         auto frame_end = Clock::now();
         //auto frame_length = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::duration( - frame_start));
 
-        auto runInfo = SchedulerRunInfo{frameNumber, {frame_start, frame_end}, lastRunInfo.frameTiming };
-        lastRunInfo.frameTiming = runInfo.frameTiming;
-
-     
+        auto runInfo = SchedulerRunInfo{frameNumber, scheduled_tasks.size(),  {frame_start, frame_end}, lastRunInfo.frameTiming };
+        lastRunInfo  = runInfo;
+        scheduled_tasks.clear();
+        
         onFrameEnd(runInfo);
 
     }

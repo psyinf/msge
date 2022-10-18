@@ -41,6 +41,7 @@ class SchedulerRunInfo
 {
 public:
     std::uint32_t   frameNumber;
+    size_t          numTasksRun;
     FrameTiming     frameTiming;
     FrameTiming     previousFrameTiming;
 };
