@@ -10,6 +10,7 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX _rd)
 set(PROJECT_NAMESPACE ${PROJECT})			# namespace for target aliases in this project
 set(PROJECT_EXPORT_NAME ${PROJECT})			# export name to be used by install() and downstream find_package()
 set(PROJECT_INSTALL_PREFIX ${PROJECT})		# folder 'prefix' for installed includes and libs
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Run conan install automatically, or display warning if conan is not installed
 include(cmake/conan_config.cmake)

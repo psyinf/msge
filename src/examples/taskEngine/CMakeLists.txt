@@ -1,4 +1,4 @@
-set(APP_NAME minimal_example)
+set(APP_NAME taskExamples)
 project(${APP_NAME} LANGUAGES CXX)
 
 file(GLOB HEADER_FILES 	CONFIGURE_DEPENDS "*.h")
@@ -14,7 +14,7 @@ add_executable(${APP_NAME}
 
 target_link_libraries (${APP_NAME} 
 	PRIVATE				
-		${PROJECT_NAMESPACE}::core
+		${PROJECT_NAMESPACE}::taskEngine
 )
 
 
@@ -34,6 +34,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 #set_target_properties(${APP_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX ${CMAKE_RELWITHDEBINFO_POSTFIX})
 set_target_properties(${APP_NAME}  PROPERTIES FOLDER "Examples")
 
+
 install(TARGETS ${APP_NAME}
         CONFIGURATIONS Debug Release RelWithDebInfo 
         RUNTIME DESTINATION bin)
@@ -42,3 +43,5 @@ install(TARGETS ${APP_NAME}
 set_target_properties(
     ${APP_NAME} PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin")
+	
+	

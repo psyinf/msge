@@ -3,17 +3,19 @@
 
 namespace msge{
 
-class BaseScheduler : public AbstractScheduler
+class BasicScheduler : public AbstractScheduler
 {
 public:
-    ~BaseScheduler() override = default;
+    ~BasicScheduler() override = default;
 
     void run() override;
 
-    void putTask(AbstractSchedulerTask* task) override;
+    void setTaskQueue(std::shared_ptr<AbstractTaskQueue> taskQueue) override;
+
+    void onFrameEnd(SchedulerRunInfo) override;
 
 private:
-    std::vector<AbstractSchedulerTask*> tasks;
+    std::shared_ptr<AbstractTaskQueue> taskQueue;
 };
 
 	

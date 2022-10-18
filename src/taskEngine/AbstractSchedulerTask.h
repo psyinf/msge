@@ -1,24 +1,38 @@
 #pragma once
 
 
-#include <cstdint>
+#include <string>
 
 
 namespace msge{
 struct FrameStamp;
 
-using TaskId = std::uint32_t;
+using TaskId = std::string;
+
+struct TaskProperties
+{
+    TaskId taskId;
+    bool reschedule; ///< needs re-scheduling to run continuously until removed
+};
+
+
 class AbstractSchedulerTask{
 public:
-    explicit AbstractSchedulerTask(TaskId id)
-        : taskId(id)
+    explicit AbstractSchedulerTask(TaskProperties const& taskProperties)
+        : taskProperties(taskProperties)
     {
     }
     virtual ~AbstractSchedulerTask()               = default;
     virtual void run(const FrameStamp& frameStamp) = 0;
 
-private:
-  const  TaskId taskId;
+    const TaskProperties& getProperties() const
+    {
+        return taskProperties;
+    }
+
+protected:
+    const TaskProperties taskProperties;
+    
 };
 	
 }
