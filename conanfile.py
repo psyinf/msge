@@ -5,7 +5,7 @@ class MSGE(ConanFile):
     name = "MSGE"
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
-    requires = [("gmtl/0.7.1")
+    requires = [("gmtl/0.7.1@psyinf/stable")
 	            ,("yaml-cpp/0.7.0")
                 ,("magic_enum/0.8.1")
                 ,("glog/0.6.0")
