@@ -47,6 +47,41 @@ public:
         }
     }
 };
+
+void preciseSleep(double seconds)
+{
+    //see https://blat-blatnik.github.io/computerBear/making-accurate-sleep-function/
+    using namespace std;
+    using namespace std::chrono;
+
+    static double  estimate = 5e-3;
+    static double  mean     = 5e-3;
+    static double  m2       = 0;
+    static int64_t count    = 1;
+
+    while (seconds > estimate)
+    {
+        auto start = high_resolution_clock::now();
+        this_thread::sleep_for(milliseconds(1));
+        auto end = high_resolution_clock::now();
+
+        double observed = (end - start).count() / 1e9;
+        seconds -= observed;
+
+        ++count;
+        double delta = observed - mean;
+        mean += delta / count;
+        m2 += delta * (observed - mean);
+        double stddev = sqrt(m2 / (count - 1));
+        estimate      = mean + stddev;
+    }
+
+    // spin lock
+    auto start = high_resolution_clock::now();
+    while ((high_resolution_clock::now() - start).count() / 1e9 < seconds)
+        ;
+}
+
 void microSleep(std::chrono::nanoseconds time_to_sleep)
 {
     if (0 >= time_to_sleep.count())
@@ -62,7 +97,8 @@ void microSleep(std::chrono::nanoseconds time_to_sleep)
 
 void onFrameEnd(const SchedulerRunInfo& runInfo)
 {
-    microSleep(std::chrono::milliseconds(500) - runInfo.frameTiming.getDuration());
+  //  microSleep(std::chrono::milliseconds(500) - runInfo.frameTiming.getDuration());
+    preciseSleep(0.5 - std::chrono::duration_cast<std::chrono::microseconds>(runInfo.frameTiming.getDuration()).count() / 1e06f);
     if (runInfo.frameNumber % 2 != 0)
     {
         return;
