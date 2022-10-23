@@ -4,6 +4,7 @@ namespace msge{
 
 class BaseEntity;
 class StaticEntity;
+class CompoundEntity;
 
 class BaseEntityVisitor
 {
@@ -13,7 +14,10 @@ public:
 
     virtual void visit(BaseEntity& entity) = 0;
 	virtual void visit(StaticEntity& entity) = 0;
+    virtual void visit(CompoundEntity& entity) = 0;
 
+protected:
+    virtual void traverse(BaseEntity&)         = 0;
 };
 
 
