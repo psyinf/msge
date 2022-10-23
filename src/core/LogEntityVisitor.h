@@ -8,12 +8,12 @@ class LogEntityVisitor : public BaseEntityVisitor
 
 public:
 
-    void visit(msge::BaseEntity& entity) override
+    void visit(BaseEntity& entity) override
     {
         std::cout << "Base: " << entity.id << "\n";
     }
 
-    void visit(msge::StaticEntity& entity) override
+    void visit(StaticEntity& entity) override
     {
         std::cout << "Static: " << entity.id << "\n";
     }

@@ -11,8 +11,8 @@ public:
     BaseEntityVisitor()          = default;
     virtual ~BaseEntityVisitor() = default;
 
-    virtual void visit(msge::BaseEntity& entity) = 0;
-	virtual void visit(msge::StaticEntity& entity) = 0;
+    virtual void visit(BaseEntity& entity) = 0;
+	virtual void visit(StaticEntity& entity) = 0;
 
 };
 
