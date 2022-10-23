@@ -8,6 +8,7 @@
 namespace msge
 {
 class BaseEntity;
+class BaseEntityVisitor;
 
 //collection of Entities 
 class BaseScene
@@ -21,6 +22,8 @@ public:
     virtual void addEntity(std::shared_ptr<BaseEntity>) = 0;
     
     virtual bool hasEntity(const EntityId& entityId) = 0;
+
+    virtual void runVisitor(BaseEntityVisitor& visitor) = 0;
 
     const SceneId& getSceneId() const
     {

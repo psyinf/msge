@@ -10,6 +10,10 @@ class StaticEntity : public BaseEntity
 {
 public:
     using BaseEntity::BaseEntity;
+   
+    void accept(BaseEntityVisitor& bev) final {
+        bev.visit(*this);
+    }
 
     Spatial spatial;
 };

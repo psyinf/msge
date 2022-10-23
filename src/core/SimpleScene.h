@@ -8,14 +8,18 @@ class SimpleScene : public BaseScene
 {
 
 public:
-    SimpleScene(const SceneId& sceneId)
+    explicit SimpleScene(const SceneId& sceneId)
         : BaseScene(sceneId)
     {
     }
 
+
     void addEntity(std::shared_ptr<BaseEntity>) override;
 
     bool hasEntity(const EntityId& entityId) override;
+
+
+    void runVisitor(BaseEntityVisitor& visitor) override;
 
 private:
     std::vector<std::shared_ptr<BaseEntity>> entities;
