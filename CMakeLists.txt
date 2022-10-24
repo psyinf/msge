@@ -14,6 +14,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Run conan install automatically, or display warning if conan is not installed
 include(cmake/conan_config.cmake)
+include(cmake/helpers.cmake)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
@@ -42,10 +43,13 @@ if(WIN32)
 	add_definitions(-DNOMINMAX)
 endif ()
 
+add_subdirectory(src/common)
 add_subdirectory(src/core)
 add_subdirectory(src/taskEngine)
-
+#EXAMPLES
 add_subdirectory(src/examples)
+#TESTS
+add_subdirectory(src/tests)
 
 add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       
 
