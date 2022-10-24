@@ -1,7 +1,7 @@
 #include "Core.h"
 
 #include "Spatial.h"
-
+#include "plugins/PluginManager.h"
 
 
 using namespace msge;
@@ -28,4 +28,11 @@ void Core::initializeLogging(const std::vector<std::string_view>& cmdLineArgs)
     google::InitGoogleLogging(cmdLineArgs.at(0).data());
 
     LOG(INFO) << std::format("Starting Core (build: {0}/{1} )", __TIMESTAMP__, __DATE__);
+}
+
+void Core::setup(const Config& config)
+{
+    //TODO: load plugins and register
+    //1. plugins for serializiation backends (JSON, protobuffer, ..)
+    //2. plugins for sending data to external receivers (rendering backends, distributed computing, ...)
 }

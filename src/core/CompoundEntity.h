@@ -23,12 +23,12 @@ public:
     {
         std::ranges::for_each(children, [&bev](auto& c) { c->accept(bev); });
     }
-    
+
     void addChildren(const std::shared_ptr<BaseEntity>& c)
     {
         children.emplace_back(c);
     }
-    Spatial spatial;
+
 
 private:
     std::vector<std::shared_ptr<BaseEntity>> children;

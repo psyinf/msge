@@ -23,6 +23,7 @@ target_link_libraries(${LIB_NAME}
 		
 	PRIVATE
 		${PROJECT_NAMESPACE}::taskEngine
+		${PROJECT_NAMESPACE}::common
 )
 target_include_directories(${LIB_NAME}
 	INTERFACE
