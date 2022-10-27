@@ -8,9 +8,15 @@
 #include <string>
 #include <vector>
 
+
 namespace msge{
 
+class BaseEntityVisitor;
 
+namespace plugins
+{
+class PluginRegistry;
+}
 
 class Core
 {
@@ -19,9 +25,10 @@ class Core
         std::string plugins_path;
 
     };
-    static constexpr std::array<std::uint16_t, 3> inlineStaticVar = {0u,1u,0};
-    
+
 public:
+    Core();
+    ~Core();
     /**
      * Initialize logging framework. Should be done as early as possible. 
      */
@@ -30,6 +37,11 @@ public:
      * Setup facilities using the configuration
      */
     void setup(const Config& config);
+
+	auto& getPluginRegistry() const { return *pluginRegistry; }
+
+private:
+    std::unique_ptr<plugins::PluginRegistry> pluginRegistry;
      
 };
 

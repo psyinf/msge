@@ -2,6 +2,7 @@
 
 #include "Spatial.h"
 #include "plugins/PluginManager.h"
+#include "plugins/PluginRegistry.h"
 
 
 using namespace msge;
@@ -34,5 +35,16 @@ void Core::setup(const Config& config)
 {
     //TODO: load plugins and register
     //1. plugins for serializiation backends (JSON, protobuffer, ..)
+    // 
+    // 
     //2. plugins for sending data to external receivers (rendering backends, distributed computing, ...)
+    //FIXME: for tests
+
+    pluginRegistry = std::make_unique<plugins::PluginRegistry>();
+
 }
+
+Core::Core() = default;
+
+Core::~Core() = default;
+
