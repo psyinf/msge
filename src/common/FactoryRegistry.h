@@ -17,7 +17,7 @@ template <class T, typename... A>
 class GenericFactory
 {
 public:
-    using CtorFunc = std::function<typename std::unique_ptr<typename std::remove_pointer<T>::type>(A...)>;
+    using CtorFunc = std::function<typename std::unique_ptr<typename std::remove_pointer_t<T>>(A...)>;
 
 
     typename static auto proto()

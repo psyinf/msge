@@ -1,4 +1,4 @@
-set(LIB_NAME core)
+set(LIB_NAME default)
 #FILES
 file(GLOB_RECURSE HEADER_FILES 	CONFIGURE_DEPENDS "*.h")
 file(GLOB_RECURSE CPP_FILES 	CONFIGURE_DEPENDS "*.cpp")
@@ -9,9 +9,9 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 #DEPENDENCIES
 find_package(glog CONFIG REQUIRED)
 find_package(gmtl CONFIG REQUIRED)
-find_package(magic_enum CONFIG REQUIRED)
 
-add_library(${LIB_NAME} STATIC 
+
+add_library(${LIB_NAME} SHARED 
 	${HEADER_FILES} 
 	${CPP_FILES} 
 )
@@ -21,11 +21,13 @@ target_link_libraries(${LIB_NAME}
 	PUBLIC	
 		glog::glog
 		gmtl::gmtl
+
 		
 	PRIVATE
-		${PROJECT_NAMESPACE}::taskEngine
+		${PROJECT_NAMESPACE}::core
 		${PROJECT_NAMESPACE}::common
-		magic_enum::magic_enum
+		
+
 )
 target_include_directories(${LIB_NAME}
 	INTERFACE

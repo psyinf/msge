@@ -1,0 +1,1 @@
+add_named_subdirectory(DIRECTORY default FOLDER plugins/default)

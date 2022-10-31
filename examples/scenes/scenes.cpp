@@ -35,6 +35,7 @@ try
     bs->addEntity(std::make_shared<BaseEntity>("be1"));
     msge::LogEntityVisitor lev;
 
+    
 
     bs->runVisitor(lev);
 }

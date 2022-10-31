@@ -47,9 +47,11 @@ add_subdirectory(src/common)
 add_subdirectory(src/core)
 add_subdirectory(src/taskEngine)
 #EXAMPLES
-add_subdirectory(src/examples)
+add_subdirectory(src/plugins)
+#EXAMPLES
+add_subdirectory(examples)
 #TESTS
-add_subdirectory(src/tests)
+add_subdirectory(src/common_tests)
 
 add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       
 
