@@ -4,9 +4,13 @@
 
 
 
-namespace msge::plugin
+namespace msge::plugins
 {
 class PluginRegistry;
+
+class CorePluginInfo : public common::PluginInfo
+{
+};
 
 class CorePluginInterface : public common::PluginBase
 {

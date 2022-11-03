@@ -1,15 +1,18 @@
+#include <glog/logging.h>
 #include <plugins/PluginBase.h>
 #include <plugins/PluginRegistry.h>
-
-#include <serializer/StreamSerializer.h>
-
-#include <glog/logging.h>
-
+#include <serializer/JsonSerializer.h>
 #include <string>
 
 
+namespace msge
+{
+class Core;
+}
+
+
 #define CONTROLLER_PLUGIN_API _declspec(dllexport)
-const static std::string pluginName = "DefaultPIDController";
+const static std::string pluginName = "DefaultPlugin";
 
 extern "C" CONTROLLER_PLUGIN_API void getInfo(common::PluginInfo& info)
 {
@@ -20,11 +23,11 @@ extern "C" CONTROLLER_PLUGIN_API void registerPlugin(msge::plugins::PluginRegist
 {
     try
     {
-        auto proto = common::GenericFactory<msge::plugin::StreamSerializer>::proto();
-        registry.registerPlugin("plaintext", msge::plugins::PluginRegistry::PluginRole::SERIALIZER, proto);
+        auto proto = common::GenericFactory<msge::plugin::JsonSerializer, msge::Core&>::proto();
+        registry.registerPlugin("JsonSerializer", proto);
     }
     catch (const std::exception& e)
     {
-        LOG(ERROR) << "Error registering plugin " << pluginName << ": " << e.what();
+        LOG(ERROR) << "Error registering plugin " << std::quoted(pluginName) << ": " << e.what();
     }
 }

@@ -11,7 +11,7 @@
 #endif
 
 
-using namespace msge::plugin;
+using namespace msge::plugins;
 
 CorePluginInterface::CorePluginInterface(const std::string& plugin_file_path)
     : common::PluginBase(plugin_file_path)

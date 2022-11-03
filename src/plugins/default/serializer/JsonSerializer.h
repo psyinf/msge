@@ -5,30 +5,32 @@
 
 namespace msge::plugin
 {
-class StreamSerializer : public BaseEntityVisitor
+
+
+class JsonSerializer : public CoreEntityVisitor
 {
-    std::ostream& os =  std::cout;
+    //std::ostream& os =  std::cout;
 
 public:
-    //TODO: add constructor with sink descriptor. This could be a reference to a registry holding a sink
-
+    JsonSerializer(Core& core )
+        : CoreEntityVisitor(core)
+    {
+        //TODO: retrieve the prototype to serialize to
+    }
 
     void visit(BaseEntity& entity) override
     {
-        os << entity.id;
-        entity.accept(*this);
+       
     }
 
     void visit(StaticEntity& entity) override
     {
-        os << entity.id;
-        entity.accept(*this);
+      
     }
 
     void visit(CompoundEntity& entity) override
     {
-        os << entity.id;
-        entity.accept(*this);
+       
     }
 
 protected:

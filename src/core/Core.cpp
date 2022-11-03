@@ -1,13 +1,14 @@
 #include "Core.h"
 
 #include "Spatial.h"
-#include "plugins/PluginManager.h"
-#include "plugins/PluginRegistry.h"
 
+#include "plugins/PluginRegistry.h"
+#include <plugins/CorePluginInterface.h>
+#include "plugins/PluginManager.h"
 
 using namespace msge;
 
-void Core::initializeLogging(const std::vector<std::string_view>& cmdLineArgs)
+void Core::initializeLogging(const CommandLineArgs& cmdLineArgs)
 {
     FLAGS_alsologtostderr    = 1;
     FLAGS_colorlogtostderr   = 1;
@@ -31,20 +32,25 @@ void Core::initializeLogging(const std::vector<std::string_view>& cmdLineArgs)
     LOG(INFO) << std::format("Starting Core (build: {0}/{1} )", __TIMESTAMP__, __DATE__);
 }
 
-void Core::setup(const Config& config)
+Core::CommandLineArgs Core::makeCommandLineArgs(int argc, char** argv)
 {
-    //TODO: load plugins and register
-    //1. plugins for serializiation backends (JSON, protobuffer, ..)
-    // 
-    // 
-    //2. plugins for sending data to external receivers (rendering backends, distributed computing, ...)
-    //FIXME: for tests
-
-    pluginRegistry = std::make_unique<plugins::PluginRegistry>();
-
+    return CommandLineArgs(argv, argv + argc);
 }
 
-Core::Core() = default;
+void Core::setup(const Config& config, const CommandLineArgs& args)
+{
+    initializeLogging(args);
+    pluginManager->scanForPlugins(config.plugins_path);
+}
+
+Core::Core(const Config& config, const CommandLineArgs& args)
+    : pluginRegistry(std::make_unique<plugins::PluginRegistry>())
+    , pluginManager(std::make_unique<CorePluginManager>())
+{
+    setup(config, args);
+}
+
+
 
 Core::~Core() = default;
 

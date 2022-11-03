@@ -2,7 +2,7 @@
 
 #include "buildInfo.h"
 #include "strings/StringTools.h"
-
+#include <glog/logging.h>
 #include <filesystem>
 #include <format>
 #include <iostream>
@@ -14,7 +14,6 @@
 
 namespace common
 {
-
 
 template <class PluginBaseClass, class PluginInfoType>
 class PluginManager
@@ -50,17 +49,17 @@ public:
 
             if (!Strings::matchesWildCard(file_path, filter))
             {
-                VLOG(1) << "skipping non matching plugin: " << quote(file_path);
+                VLOG(1) << "skipping non matching plugin: " << std::quoted(file_path);
                 continue;
             }
             else if (!file_path_noext.ends_with("_d") && isDebug())
             {
-                VLOG(1) << "skipping non-debug plugin: " << quote(file_path_noext);
+                VLOG(1) << "skipping non-debug plugin: " << std::quoted(file_path_noext);
                 continue;
             }
             else if (file_path_noext.ends_with("_d") && !isDebug())
             {
-                VLOG(1) << "skipping debug plugin: " << quote(file_path_noext);
+                VLOG(1) << "skipping debug plugin: " << std::quoted(file_path_noext);
                 continue;
             }
             else

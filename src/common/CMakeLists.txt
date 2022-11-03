@@ -18,10 +18,12 @@ add_library(${LIB_NAME} STATIC
 add_library(${PROJECT_NAMESPACE}::${LIB_NAME} ALIAS ${LIB_NAME})
 set_target_properties(${LIB_NAME} PROPERTIES LINKER_LANGUAGE Cxx) 
 target_link_libraries(${LIB_NAME}
-	INTERFACE	
+	PUBLIC	
 		glog::glog
-		gmtl::gmtl		
+	INTERFACE
+		gmtl::gmtl
 )
+
 target_include_directories(${LIB_NAME}
 	INTERFACE
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_INSTALL_PREFIX}/${LIB_NAME}>
