@@ -3,5 +3,14 @@ Minimal Space Game Engine
 
 
 Setup
-Add a remote for gmtl:
-conan remote add psyinf-conan https://psyinf.jfrog.io/artifactory/api/conan/psyinf-conan
+Install conan (https://docs.conan.io/en/latest/installation.html)
+
+Create conan profile (optional)
+
+* conan profile new default --detect
+* conan profile update settings.compiler.cppstd=gnu23 default
+
+Build missing packages
+* conan  install . --build=missing  --install-folder=../build/msge
+
+
