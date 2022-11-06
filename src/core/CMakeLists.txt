@@ -8,7 +8,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 
 #DEPENDENCIES
 find_package(glog CONFIG REQUIRED)
-find_package(gmtl CONFIG REQUIRED)
+find_package(psyinf-gmtl CONFIG REQUIRED)
 find_package(magic_enum CONFIG REQUIRED)
 
 add_library(${LIB_NAME} STATIC 
@@ -20,7 +20,7 @@ add_library(${PROJECT_NAMESPACE}::${LIB_NAME} ALIAS ${LIB_NAME})
 target_link_libraries(${LIB_NAME}
 	PUBLIC	
 		glog::glog
-		gmtl::gmtl
+		psyinf-gmtl::psyinf-gmtl
 		
 	PRIVATE
 		${PROJECT_NAMESPACE}::taskEngine

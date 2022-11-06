@@ -9,7 +9,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 
 #DEPENDENCIES
 find_package(glog CONFIG REQUIRED)
-find_package(gmtl CONFIG REQUIRED)
+
 
 add_library(${LIB_NAME} STATIC 
 	${HEADER_FILES} 
@@ -20,8 +20,7 @@ set_target_properties(${LIB_NAME} PROPERTIES LINKER_LANGUAGE Cxx)
 target_link_libraries(${LIB_NAME}
 	PUBLIC	
 		glog::glog
-	INTERFACE
-		gmtl::gmtl
+
 )
 
 target_include_directories(${LIB_NAME}
