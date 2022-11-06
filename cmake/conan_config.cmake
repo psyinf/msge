@@ -8,11 +8,13 @@ else()
         message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
         file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
                       "${CMAKE_BINARY_DIR}/conan.cmake")
+		message(STATUS "Finished downloading conan.cmake")
     endif()
 
 
     include(${CMAKE_BINARY_DIR}/conan.cmake)
 	foreach(TYPE ${CMAKE_CONFIGURATION_TYPES})
+		message(STATUS "Building missing conan packages")
 		conan_cmake_autodetect(settings BUILD_TYPE ${TYPE})
 		conan_cmake_install(PATH_OR_REFERENCE .
                         BUILD missing
