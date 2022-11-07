@@ -13,6 +13,16 @@ else()
 
 
     include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+    if (NOT DEFINED ${MY_VARIABLE})    	
+    	message(STATUS "TYPES: ${CMAKE_CONFIGURATION_TYPES}")
+    	message(STATUS "Building missing conan packages")
+		conan_cmake_autodetect(settings BUILD_TYPE ${TYPE})
+		conan_cmake_install(PATH_OR_REFERENCE .
+                        BUILD missing
+                        REMOTE conancenter
+                        SETTINGS ${settings})
+    else()
 	foreach(TYPE ${CMAKE_CONFIGURATION_TYPES})
 		message(STATUS "Building missing conan packages")
 		conan_cmake_autodetect(settings BUILD_TYPE ${TYPE})
@@ -21,7 +31,7 @@ else()
                         REMOTE conancenter
                         SETTINGS ${settings})
 	endforeach()
-	
+    endif()	
     set(CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}" ${CMAKE_MODULE_PATH})
 	set(CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" ${CMAKE_PREFIX_PATH})
 endif()
