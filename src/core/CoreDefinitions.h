@@ -1,10 +1,11 @@
 #pragma once
 #include <algorithm>
 #include <array>
-#include <format>
 #include <stdexcept>
 #include <string>
 #include <cstring>
+
+#include <fmt/core.h>
 
 namespace msge
 {
@@ -20,7 +21,7 @@ public:
     {
         if (s.length() > LENGTH)
         {
-            throw std::invalid_argument(std::format("{} too long for FixedString<{}>", s, LENGTH));
+            throw std::invalid_argument(fmt::format("{} too long for FixedString<{}>", s, LENGTH));
         }
         data[std::min(data.size() - 1, s.length())] = '\0';
         std::ranges::copy(s, data.begin());

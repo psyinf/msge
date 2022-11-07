@@ -11,7 +11,7 @@ void SimpleScene::addEntity(std::shared_ptr<BaseEntity> entity)
 {
     if (hasEntity(entity->id))
     {
-        throw std::invalid_argument(std::format("Entity '{}' already in scene", entity->id));
+        throw std::invalid_argument(fmt::format("Entity '{}' already in scene", entity->id));
     }
     entities.push_back(entity);
 }

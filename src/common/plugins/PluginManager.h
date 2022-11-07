@@ -4,7 +4,7 @@
 #include "strings/StringTools.h"
 #include <glog/logging.h>
 #include <filesystem>
-#include <format>
+
 #include <iostream>
 #include <map>
 #include <memory>
@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include <fmt/core.h>
 namespace common
 {
 
@@ -71,18 +72,18 @@ public:
                     plugin->getInfo(plugin_info);
                     if (!mPlugins.count(plugin_info))
                     {
-                        LOG(INFO) << std::format("Found plugin {} [{}]", file_path, plugin_info.name);
+                        LOG(INFO) << fmt::format("Found plugin {} [{}]", file_path, plugin_info.name);
                         mPlugins[plugin_info] = plugin;
                         ++num_loaded;
                     }
                     else
                     {
-                        LOG(WARNING) << std::format("Skipping plugin {} [{}], already registered.", file_path, plugin_info.name);
+                        LOG(WARNING) << fmt::format("Skipping plugin {} [{}], already registered.", file_path, plugin_info.name);
                     }
                 }
                 catch (const std::exception& e)
                 {
-                    LOG(ERROR) << std::format("Error loading plugin {}: {}", p.path().string(), e.what());
+                    LOG(ERROR) << fmt::format("Error loading plugin {}: {}", p.path().string(), e.what());
                 }
             }
         }

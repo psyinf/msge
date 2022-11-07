@@ -5,6 +5,7 @@
 #include "plugins/PluginRegistry.h"
 #include <plugins/CorePluginInterface.h>
 #include "plugins/PluginManager.h"
+#include <fmt/core.h>
 
 using namespace msge;
 
@@ -29,7 +30,7 @@ void Core::initializeLogging(const CommandLineArgs& cmdLineArgs)
 
     google::InitGoogleLogging(cmdLineArgs.at(0).data());
 
-    LOG(INFO) << std::format("Starting Core (build: {0}/{1} )", __TIMESTAMP__, __DATE__);
+    LOG(INFO) << fmt::format("Starting Core (build: {0}/{1} )", __TIMESTAMP__, __DATE__);
 }
 
 Core::CommandLineArgs Core::makeCommandLineArgs(int argc, char** argv)

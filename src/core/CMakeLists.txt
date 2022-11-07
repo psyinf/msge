@@ -2,6 +2,7 @@ set(LIB_NAME core)
 #FILES
 file(GLOB_RECURSE HEADER_FILES 	CONFIGURE_DEPENDS "*.h")
 file(GLOB_RECURSE CPP_FILES 	CONFIGURE_DEPENDS "*.cpp")
+
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" 
 	FILES ${HEADER_FILES}  ${CPP_FILES}
 )
@@ -10,6 +11,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 find_package(glog CONFIG REQUIRED)
 find_package(psyinf-gmtl CONFIG REQUIRED)
 find_package(magic_enum CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 add_library(${LIB_NAME} STATIC 
 	${HEADER_FILES} 
@@ -23,6 +25,7 @@ target_link_libraries(${LIB_NAME}
 	PUBLIC	
 		glog::glog
 		psyinf-gmtl::psyinf-gmtl
+		fmt::fmt
 		
 	PRIVATE
 		${PROJECT_NAMESPACE}::taskEngine
