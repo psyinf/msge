@@ -57,7 +57,7 @@ std::string getLastError()
 
 
 
-PLUGIN_API
+
 PluginBase::PluginBase(const std::string& path)
     : path(path)
 {
@@ -83,12 +83,12 @@ void PluginBase::reportMissingInterface(const std::string& path, const std::stri
     throw std::invalid_argument(fmt::format("Plugin at '{}' is not a valid plugin (Missing '{}' interface)", path, name));
 }
 
-PLUGIN_API void PluginBase::getInfo(PluginInfo& info) const
+void PluginBase::getInfo(PluginInfo& info) const
 {
     getInfoFunction(info);
 }
 
-PLUGIN_API PluginBase::~PluginBase()
+PluginBase::~PluginBase()
 {
 
     if (dllHandle.has_value())

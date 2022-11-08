@@ -42,11 +42,13 @@ void Core::setup(const Config& config, const CommandLineArgs& args)
 {
     initializeLogging(args);
     pluginManager->scanForPlugins(config.plugins_path);
-    //intialize plugins
+    //#TODO remove DEBUG code for testing: intialize plugins and move this to a "smoke"test
     for (auto& [k, v] : pluginManager->getPluginList())
     {
         v->registerPlugin(*pluginRegistry);
     } 
+    auto jsonSerializer = pluginRegistry->getCoreVisitorPrototype("JsonSerializer", *this);
+    
 }
 
 Core::Core(const Config& config, const CommandLineArgs& args)

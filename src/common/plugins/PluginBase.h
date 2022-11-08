@@ -25,13 +25,13 @@ class PluginBase
 public:
     using DLLHandle = std::any;
 
-    PLUGIN_API explicit PluginBase(const std::string& path);
-    PLUGIN_API virtual ~PluginBase();
+    explicit PluginBase(const std::string& path);
+    virtual ~PluginBase();
 
     PluginBase(const PluginBase&)            = delete;
     PluginBase& operator=(const PluginBase&) = delete;
 
-    PLUGIN_API void getInfo(PluginInfo& info) const;
+    void getInfo(PluginInfo& info) const;
     void    reportMissingInterface(const std::string& path, const std::string& name) const;
 
     DLLHandle getHandle() const
