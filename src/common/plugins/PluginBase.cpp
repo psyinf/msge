@@ -9,6 +9,8 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#elif __linux__
+#include <dlfcn.h>
 #endif
 
 using namespace common;
@@ -99,9 +101,9 @@ PluginBase::~PluginBase()
         getInfo(info);
 #ifdef _WIN32
         ::FreeLibrary(std::any_cast<HMODULE>(dllHandle));
-#elif
+#elif  __linux__
         dlclose(std::any_cast<void*>(dllHandle))
-        #endif
+#endif
     }
 }
 
