@@ -12,6 +12,7 @@
 #endif
 
 using namespace common;
+#ifdef _WIN32
 std::string FormatErrorMessage(const DWORD errorCode)
 {
     std::array<char, 512> message;
@@ -27,6 +28,7 @@ std::string FormatErrorMessage(const DWORD errorCode)
 
     return std::string(message.begin(), message.end());
 }
+#endif
 
 //#TODO: explore modes and try to match flags to unify interface here
 
@@ -35,7 +37,7 @@ PluginBase::DLLHandle LoadSharedLibrary(std::string_view libraryPath, [[maybe_un
 #if defined(_MSC_VER) // Microsoft compiler
     return static_cast<HMODULE>(LoadLibraryEx(libraryPath.data(), nullptr, 0x0));
 #elif defined(__linux__)
-    return dlopen(sDllName.c_str(), iMode);
+    return dlopen(libraryPath.c_str(), iMode);
 #endif
 }
 
@@ -63,7 +65,7 @@ PluginBase::PluginBase(const std::string& path)
 {
     auto handle = LoadSharedLibrary(path);
 
-    if (!std::any_cast<HMODULE>(handle))
+    if (!handle.has_value())
     {
         auto last_err_str = getLastError();
         throw std::invalid_argument(fmt::format("Could not load '{}'.\nError reported: {}", path, last_err_str));
@@ -95,7 +97,11 @@ PluginBase::~PluginBase()
     {
         PluginInfo info;
         getInfo(info);
+#ifdef _WIN32
         ::FreeLibrary(std::any_cast<HMODULE>(dllHandle));
+#elif
+        dlclose(std::any_cast<void*>(dllHandle))
+        #endif
     }
 }
 
