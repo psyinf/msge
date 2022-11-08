@@ -29,11 +29,11 @@ std::string FormatErrorMessage(const DWORD errorCode)
 }
 
 //#TODO: explore modes and try to match flags to unify interface here
-using Handle = void*;
-Handle LoadSharedLibrary(std::string_view libraryPath, [[maybe_unused]] int iMode = 2)
+
+PluginBase::DLLHandle LoadSharedLibrary(std::string_view libraryPath, [[maybe_unused]] int iMode = 2)
 {
 #if defined(_MSC_VER) // Microsoft compiler
-    return (void*)LoadLibraryEx(libraryPath.data(), nullptr, 0x0);
+    return static_cast<HMODULE>(LoadLibraryEx(libraryPath.data(), nullptr, 0x0));
 #elif defined(__linux__)
     return dlopen(sDllName.c_str(), iMode);
 #endif
@@ -63,7 +63,7 @@ PluginBase::PluginBase(const std::string& path)
 {
     auto handle = LoadSharedLibrary(path);
 
-    if (!handle)
+    if (!std::any_cast<HMODULE>(handle))
     {
         auto last_err_str = getLastError();
         throw std::invalid_argument(fmt::format("Could not load '{}'.\nError reported: {}", path, last_err_str));
@@ -102,7 +102,7 @@ PLUGIN_API PluginBase::~PluginBase()
 void* PluginBase::_getFunction(const DLLHandle& handle, std::string_view name)
 {
 #if defined(_MSC_VER) // Microsoft compiler
-    return ::GetProcAddress(std::any_cast<HINSTANCE>(getHandle()), name.data());
+    return ::GetProcAddress(std::any_cast<HINSTANCE>(handle), name.data());
 #elif __linux__
     return dlsym(handle, name.data());
 #endif

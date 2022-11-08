@@ -53,8 +53,9 @@ public:
 private:
     void                                     setup(const Config& config, const CommandLineArgs& args);
 
+      std::unique_ptr<CorePluginManager>       pluginManager;
     std::unique_ptr<plugins::PluginRegistry> pluginRegistry;
-    std::unique_ptr<CorePluginManager>       pluginManager;
+  
      
 };
 

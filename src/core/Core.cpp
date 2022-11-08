@@ -42,6 +42,11 @@ void Core::setup(const Config& config, const CommandLineArgs& args)
 {
     initializeLogging(args);
     pluginManager->scanForPlugins(config.plugins_path);
+    //intialize plugins
+    for (auto& [k, v] : pluginManager->getPluginList())
+    {
+        v->registerPlugin(*pluginRegistry);
+    } 
 }
 
 Core::Core(const Config& config, const CommandLineArgs& args)

@@ -5,10 +5,7 @@
 #include <stdexcept>
 
 #include <fmt/core.h>
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#endif
+
 
 
 using namespace msge::plugins;
@@ -20,7 +17,7 @@ CorePluginInterface::CorePluginInterface(const std::string& plugin_file_path)
 }
 
 
-bool CorePluginInterface::registerPlugin(PluginRegistry& pluginRegistry)
+bool CorePluginInterface::registerPlugin(PluginRegistry& pluginRegistry) const
 {
     if (registerPluginFn)
     {

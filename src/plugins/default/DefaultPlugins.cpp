@@ -30,7 +30,10 @@ extern "C" CONTROLLER_PLUGIN_API void registerPlugin(msge::plugins::PluginRegist
     try
     {
         auto proto = common::GenericFactory<msge::plugin::JsonSerializer, msge::Core&>::proto();
+        
         registry.registerPlugin("JsonSerializer", proto);
+        LOG(INFO) << "registered plugin "
+                  << "JsonSerializer";
     }
     catch (const std::exception& e)
     {
