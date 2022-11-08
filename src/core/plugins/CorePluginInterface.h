@@ -20,7 +20,7 @@ public:
     __declspec(dllexport) bool registerPlugin(PluginRegistry& core);
 
 private:
-    std::function<int(PluginRegistry&)> registerPluginFn;
+    std::function<void(PluginRegistry&)> registerPluginFn;
 
 
     

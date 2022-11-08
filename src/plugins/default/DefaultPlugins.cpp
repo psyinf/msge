@@ -4,6 +4,12 @@
 #include <serializer/JsonSerializer.h>
 #include <string>
 
+//TODO move to a macro
+#ifdef _WIN32
+#define CONTROLLER_PLUGIN_API _declspec(dllexport)
+#elif __linux__
+#define CONTROLLER_PLUGIN_API()
+#endif
 
 namespace msge
 {
@@ -11,7 +17,7 @@ class Core;
 }
 
 
-#define CONTROLLER_PLUGIN_API _declspec(dllexport)
+
 const static std::string pluginName = "DefaultPlugin";
 
 extern "C" CONTROLLER_PLUGIN_API void getInfo(common::PluginInfo& info)
