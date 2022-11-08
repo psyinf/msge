@@ -1,10 +1,10 @@
 #include "CorePluginInterface.h"
 
 #include <any>
-#include <format>
 #include <iomanip>
 #include <stdexcept>
 
+#include <fmt/core.h>
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -26,7 +26,7 @@ CorePluginInterface::CorePluginInterface(const std::string& plugin_file_path)
     // a plain simple DLL and not one of our plug-ins
     if (!registerPluginFn)
     {
-        throw std::invalid_argument(std::format("{} is not a valid plug-in due to missing {} function", plugin_file_path, "registerPlugin"));
+        throw std::invalid_argument(fmt::format("{} is not a valid plug-in due to missing {} function", plugin_file_path, "registerPlugin"));
     }
     // TODO: check for version incompatibilities
 }

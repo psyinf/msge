@@ -9,7 +9,8 @@ class MSGE(ConanFile):
 	            ,("yaml-cpp/0.7.0")
                 ,("magic_enum/0.8.1")
                 ,("glog/0.6.0")
-                ,("gtest/1.12.1")      
+                ,("gtest/1.12.1")    
+                ,("fmt/9.1.0")
                 ]
     generators = "cmake_find_package_multi"
     

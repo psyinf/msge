@@ -3,10 +3,11 @@
 #include "glog/logging.h"
 
 #include <array>
-#include <format>
+
 #include <functional>
 #include <stdexcept>
 
+#include <fmt/core.h>
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -45,7 +46,7 @@ PluginBase::PluginBase(const std::string& path)
         last_err_str.append(" ( ");
         last_err_str.append(std::to_string(error));
         last_err_str.append(" )");
-        throw std::invalid_argument(std::format("Could not load '{}'.\nError reported: {}", path, last_err_str));
+        throw std::invalid_argument(fmt::format("Could not load '{}'.\nError reported: {}", path, last_err_str));
     }
     // TODO:move to generic list or use introspection
     if (::GetProcAddress(handle, "getInfo"))
@@ -62,7 +63,7 @@ PluginBase::PluginBase(const std::string& path)
 
 void PluginBase::reportMissingInterface(const std::string& path, const std::string& name) const
 {
-    throw std::invalid_argument(std::format("Plugin at '{}' is not a valid plugin (Missing '{}' interface)", path, name));
+    throw std::invalid_argument(fmt::format("Plugin at '{}' is not a valid plugin (Missing '{}' interface)", path, name));
 }
 
 PLUGIN_API void PluginBase::getInfo(PluginInfo& info) const
