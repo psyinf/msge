@@ -52,8 +52,8 @@ add_subdirectory(src/plugins)
 add_subdirectory(examples)
 #TESTS
 add_subdirectory(src/common_tests)
-
-add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       
+#removed for now, troubles with make
+#add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       
 
 
 #for now
