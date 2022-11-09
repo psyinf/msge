@@ -25,7 +25,7 @@ jobs:
     # uses: egor-tensin/setup-gcc@d04208cef6e985db0830428975fc2ab3f28d89a1
       uses: egor-tensin/setup-gcc@v1
       with:
-        version: 11
+        version: 11.3.0
         platform: x64 
     
     - name: Get Conan
@@ -36,7 +36,7 @@ jobs:
       
     - name: Update profile
       run: |
-        conan profile update settings.compiler=g++ default
+        conan profile update settings.compiler=gcc default
         conan profile update settings.compiler.version=11 default 
         conan profile update settings.compiler.libcxx=libstdc++11 default
    
