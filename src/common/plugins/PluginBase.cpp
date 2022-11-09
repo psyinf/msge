@@ -39,7 +39,7 @@ PluginBase::DLLHandle LoadSharedLibrary(std::string_view libraryPath, [[maybe_un
 #if defined(_MSC_VER) // Microsoft compiler
     return static_cast<HMODULE>(LoadLibraryEx(libraryPath.data(), nullptr, 0x0));
 #elif defined(__linux__)
-    return dlopen(libraryPath.c_str(), iMode);
+    return dlopen(libraryPath.data(), iMode);
 #endif
 }
 
@@ -102,7 +102,7 @@ PluginBase::~PluginBase()
 #ifdef _WIN32
         ::FreeLibrary(std::any_cast<HMODULE>(dllHandle));
 #elif  __linux__
-        dlclose(std::any_cast<void*>(dllHandle))
+        dlclose(std::any_cast<void*>(dllHandle));
 #endif
     }
 }
@@ -112,6 +112,6 @@ void* PluginBase::_getFunction(const DLLHandle& handle, std::string_view name)
 #if defined(_MSC_VER) // Microsoft compiler
     return ::GetProcAddress(std::any_cast<HINSTANCE>(handle), name.data());
 #elif __linux__
-    return dlsym(handle, name.data());
+    return dlsym(std::any_cast<void*>(handle), name.data());
 #endif
 }
