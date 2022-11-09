@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB HEADER_FILES 	CONFIGURE_DEPENDS "*.h")
 file(GLOB CPP_FILES 	CONFIGURE_DEPENDS "*.cpp")
 
+find_package(fmt CONFIG REQUIRED)
+
 add_executable(${APP_NAME} 
 	${HEADER_FILES}
 	${CPP_FILES}
@@ -15,6 +17,7 @@ target_link_libraries (${APP_NAME}
 	PRIVATE				
 		${PROJECT_NAMESPACE}::core
 		${PROJECT_NAMESPACE}::common
+		fmt::fmt
 )
 
 
