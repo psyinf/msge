@@ -20,7 +20,7 @@ class MSGE(ConanFile):
         self.options['glog'].shared = True
         self.options['qt'].shared = True
         self.options['qt'].multiconfiguration = False
-        
+        self.options['fmt'].header_only = True
     def imports(self):    
         self.copy("*.dll", "bin", "bin")
         

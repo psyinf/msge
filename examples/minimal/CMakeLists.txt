@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB HEADER_FILES 	CONFIGURE_DEPENDS "*.h")
 file(GLOB CPP_FILES 	CONFIGURE_DEPENDS "*.cpp")
 
-find_package(fmt CONFIG REQUIRED)
-
 add_executable(${APP_NAME} 
 	${HEADER_FILES}
 	${CPP_FILES}
@@ -17,11 +15,7 @@ target_link_libraries (${APP_NAME}
 	PRIVATE				
 		${PROJECT_NAMESPACE}::core
 		${PROJECT_NAMESPACE}::common
-		fmt::fmt
 )
-
-
-
 
 target_include_directories(${APP_NAME}
 	PRIVATE
@@ -34,7 +28,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 
 set_target_properties(${APP_NAME} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 set_target_properties(${APP_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX ${CMAKE_RELWITHDEBINFO_POSTFIX})
-set_target_properties(${APP_NAME}  PROPERTIES FOLDER "Examples")
+set_target_properties(${APP_NAME} PROPERTIES FOLDER "Examples")
 
 install(TARGETS ${APP_NAME}
         CONFIGURATIONS Debug Release RelWithDebInfo 
