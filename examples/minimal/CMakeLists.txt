@@ -1,5 +1,6 @@
 set(APP_NAME minimal_example)
-project(${APP_NAME} LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB HEADER_FILES 	CONFIGURE_DEPENDS "*.h")
 file(GLOB CPP_FILES 	CONFIGURE_DEPENDS "*.cpp")
@@ -9,8 +10,6 @@ add_executable(${APP_NAME}
 	${CPP_FILES}
 )
 			   
-			   
-
 
 target_link_libraries (${APP_NAME} 
 	PRIVATE				

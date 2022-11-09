@@ -31,10 +31,16 @@ public:
         return std::make_shared<PluginBaseClass>(entry.path().string());
     }
 
+#include <algorithm>
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+
     void scanForPlugins(const std::string& path, const std::vector<std::string>& filters)
     {
         std::ranges::for_each(
-            filters, [](const auto& filter) { scanForPlugins(path, filter); });
+            filters, [&path](const auto& filter) { scanForPlugins(path, filter); });
     }
 
     size_t scanForPlugins(const std::string& path, const std::string& filter = "*.dll")

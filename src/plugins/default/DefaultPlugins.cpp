@@ -2,13 +2,16 @@
 #include <plugins/PluginBase.h>
 #include <plugins/PluginRegistry.h>
 #include <serializer/JsonSerializer.h>
+
+#include <iomanip>
 #include <string>
+
 
 //TODO move to a macro
 #ifdef _WIN32
 #define CONTROLLER_PLUGIN_API _declspec(dllexport)
 #elif __linux__
-#define CONTROLLER_PLUGIN_API()
+#define CONTROLLER_PLUGIN_API
 #endif
 
 namespace msge
