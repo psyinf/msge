@@ -21,6 +21,7 @@ target_link_libraries(${LIB_NAME}
 	PUBLIC	
 		glog::glog
 		fmt::fmt
+		${CMAKE_DL_LIBS}
 
 )
 

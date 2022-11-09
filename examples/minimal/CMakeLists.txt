@@ -15,7 +15,6 @@ target_link_libraries (${APP_NAME}
 	PRIVATE				
 		${PROJECT_NAMESPACE}::core
 		${PROJECT_NAMESPACE}::common
-		${CMAKE_DL_LIBS}
 )
 
 target_include_directories(${APP_NAME}
