@@ -3,9 +3,11 @@
 #include "AbstractTaskQueue.h"
 #include "FrameStamp.h"
 
+#include <algorithm>
 #include <chrono>
 #include <future>
 #include <iostream>
+#include <ranges>
 #include <thread>
 
 

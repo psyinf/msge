@@ -3,11 +3,10 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
-#include <iterator>
 #include <map>
-#include <ranges>
+#include <memory>
 #include <string>
-#include <vector>
+
 
 
 namespace common
@@ -20,7 +19,7 @@ public:
     using CtorFunc = std::function<typename std::unique_ptr<typename std::remove_pointer_t<T>>(A...)>;
 
 
-    typename static auto proto()
+    static auto proto()
     {
         return [](A... a) { return std::make_unique<T>(T(a...)); };
     }

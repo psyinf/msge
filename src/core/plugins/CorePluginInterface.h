@@ -17,10 +17,10 @@ class CorePluginInterface : public common::PluginBase
 public:
     explicit CorePluginInterface(const std::string& plugin_file_path);
 
-    __declspec(dllexport) bool registerPlugin(PluginRegistry& core);
+    bool registerPlugin(PluginRegistry& core) const;
 
 private:
-    std::function<int(PluginRegistry&)> registerPluginFn;
+    std::function<void(PluginRegistry&)> registerPluginFn;
 
 
     

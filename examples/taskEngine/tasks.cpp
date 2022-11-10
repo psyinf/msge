@@ -7,6 +7,7 @@
 #include <iostream>
 #include <future>
 #include <ranges>
+#include <thread>
 
 #include <fmt/core.h>
 using namespace msge;
@@ -105,9 +106,9 @@ void onFrameEnd(const SchedulerRunInfo& runInfo)
     }
     std::cout << fmt::format("num tasks: {:04d}---------# {:05d}\n", runInfo.numTasksRun, runInfo.frameNumber);
     //std::cout << runInfo.lastFrameDuration << "\n";
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.getDuration()) << ")\n";
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(runInfo.frameTiming.timeBetweenFrames(runInfo.previousFrameTiming)) << ")\n";
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.totalFrameTime(runInfo.previousFrameTiming)) << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.getDuration()).count() << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(runInfo.frameTiming.timeBetweenFrames(runInfo.previousFrameTiming)).count() << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.totalFrameTime(runInfo.previousFrameTiming)).count() << ")\n";
    
     
 

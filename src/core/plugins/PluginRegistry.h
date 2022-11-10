@@ -24,7 +24,9 @@ public:
      */
     void registerPlugin(std::string_view prototypeName, CoreVisitorFactory::CtorFunc&& constructor);
 
-    auto getInstancePrototype(std::string_view name);
+    auto getInstancePrototype(std::string_view name) const;
+
+    std::unique_ptr<msge::CoreEntityVisitor> getCoreVisitorPrototype(const std::string_view name, msge::Core&) const;
 
 private:
     BaseVisitorFactory visitorFactory;
