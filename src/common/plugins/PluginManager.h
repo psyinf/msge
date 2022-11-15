@@ -31,11 +31,6 @@ public:
         return std::make_shared<PluginBaseClass>(entry.path().string());
     }
 
-#include <algorithm>
-#include <functional>
-#include <map>
-#include <memory>
-#include <string>
 
     void scanForPlugins(const std::string& path, const std::vector<std::string>& filters)
     {
@@ -43,6 +38,7 @@ public:
             filters, [&path](const auto& filter) { scanForPlugins(path, filter); });
     }
 
+    [[maybe_unused]] 
     size_t scanForPlugins(const std::string& path, const std::string& filter = "*.dll")
     {
         size_t num_loaded = 0;
@@ -52,7 +48,7 @@ public:
         {
             auto file_path       = p.path().filename().string();
             auto file_path_noext = p.path().filename().replace_extension("").string();
-            file_path_noext | std::ranges::views::transform([](auto c) { return std::toupper(c); });
+           
 
             if (!Strings::matchesWildCard(file_path, filter))
             {
