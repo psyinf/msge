@@ -11,6 +11,7 @@ class MSGE(ConanFile):
                 ,("glog/0.6.0")
                 ,("gtest/1.12.1")    
                 ,("fmt/9.1.0")
+                ,("nlohmann_json/3.11.2")
                 ]
     generators = "cmake_find_package_multi"
     

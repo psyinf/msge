@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+
+
 namespace common
 {
 template <class PluginBaseClass, class PluginInfoType>
@@ -16,6 +18,7 @@ namespace msge
 {
 
 class BaseEntityVisitor;
+class CoreConfig;
 
 namespace plugins
 {
@@ -28,14 +31,11 @@ using CorePluginManager = common::PluginManager<msge::plugins::CorePluginInterfa
 class Core
 {
 public:
-    struct Config
-    {
-        std::string plugins_path = "plugins";
-    };
+    
 
     using CommandLineArgs = std::vector<std::string_view>;
 
-    explicit Core(const Config& config, const CommandLineArgs&);
+    explicit Core(const CoreConfig& config, const CommandLineArgs&);
     ~Core();
     /**
      * Initialize logging framework. Will be called by the Core constructor, but can also be called in contexts without a core reference.
@@ -51,7 +51,7 @@ public:
     auto& getPluginRegistry() const { return *pluginRegistry; }
 
 private:
-    void setup(const Config& config, const CommandLineArgs& args);
+    void setup(const CoreConfig& config, const CommandLineArgs& args);
 
     std::unique_ptr<CorePluginManager>       pluginManager;
     std::unique_ptr<plugins::PluginRegistry> pluginRegistry;

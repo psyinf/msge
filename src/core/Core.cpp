@@ -1,4 +1,5 @@
 #include "Core.h"
+#include "CoreConfig.h"
 
 #include "Spatial.h"
 
@@ -38,7 +39,7 @@ Core::CommandLineArgs Core::makeCommandLineArgs(int argc, char** argv)
     return CommandLineArgs(argv, argv + argc);
 }
 
-void Core::setup(const Config& config, const CommandLineArgs& args)
+void Core::setup(const CoreConfig& config, const CommandLineArgs& args)
 {
     initializeLogging(args);
     pluginManager->scanForPlugins(config.plugins_path);
@@ -51,7 +52,7 @@ void Core::setup(const Config& config, const CommandLineArgs& args)
     
 }
 
-Core::Core(const Config& config, const CommandLineArgs& args)
+Core::Core(const CoreConfig& config, const CommandLineArgs& args)
     : pluginRegistry(std::make_unique<plugins::PluginRegistry>())
     , pluginManager(std::make_unique<CorePluginManager>())
 {

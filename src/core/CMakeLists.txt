@@ -8,10 +8,11 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 #DEPENDENCIES
+find_package(fmt CONFIG REQUIRED)
 find_package(glog CONFIG REQUIRED)
 find_package(gmtl CONFIG REQUIRED)
 find_package(magic_enum CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(${LIB_NAME} STATIC 
 	${HEADER_FILES} 
@@ -26,6 +27,7 @@ target_link_libraries(${LIB_NAME}
 		glog::glog
 		gmtl::gmtl
 		fmt::fmt
+		nlohmann_json::nlohmann_json
 		
 	PRIVATE
 		${PROJECT_NAMESPACE}::taskEngine
