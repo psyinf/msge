@@ -7,6 +7,7 @@
 #include <plugins/CorePluginInterface.h>
 #include "plugins/PluginManager.h"
 #include <fmt/core.h>
+#include <SimpleScene.h>
 
 using namespace msge;
 
@@ -42,14 +43,16 @@ Core::CommandLineArgs Core::makeCommandLineArgs(int argc, char** argv)
 void Core::setup(const CoreConfig& config, const CommandLineArgs& args)
 {
     initializeLogging(args);
+
     pluginManager->scanForPlugins(config.plugins_path);
-    //#TODO remove DEBUG code for testing: intialize plugins and move this to a "smoke"test
-    for (auto& [k, v] : pluginManager->getPluginList())
+  
+    for (const auto& [k, v] : pluginManager->getPluginList())
     {
         v->registerPlugin(*pluginRegistry);
-    } 
-    auto jsonSerializer = pluginRegistry->getCoreVisitorPrototype("JsonSerializer", *this);
-    
+    }    
+
+    //scenes from configuration
+    rootScenes.insert({SceneId(config.default_scene), std::make_unique<SimpleScene>("root")});
 }
 
 Core::Core(const CoreConfig& config, const CommandLineArgs& args)
