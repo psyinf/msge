@@ -6,7 +6,7 @@ enable_testing()
 
 include(GoogleTest)
 
-add_executable(${TESTPACKAGE} StringToolsTest.cpp)
+add_executable(${TESTPACKAGE} StringToolsTest.cpp CommonTest.cpp)
 
 target_link_libraries(${TESTPACKAGE} 
 	PRIVATE
