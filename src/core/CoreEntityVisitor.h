@@ -22,5 +22,7 @@ public:
         : BaseEntityVisitor()
         , core(core)
     {}
+
+    
 };
 }

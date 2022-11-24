@@ -1,7 +1,16 @@
 #include <BaseEntity.h>
-#include <BaseEntityVisitor.h>
+#include <CoreEntityVisitor.h>
 #include <CompoundEntity.h>
 #include <StaticEntity.h>
+
+#include <nlohmann/json.hpp>
+
+#include <fstream>
+
+namespace msge
+{
+class Core;
+}
 
 namespace msge::plugin
 {
@@ -9,34 +18,22 @@ namespace msge::plugin
 
 class JsonSerializer : public CoreEntityVisitor
 {
-    //std::ostream& os =  std::cout;
+    
 
 public:
-    JsonSerializer(Core& core )
-        : CoreEntityVisitor(core)
-    {
-        //TODO: retrieve the prototype to serialize to
-    }
+    JsonSerializer(Core& core );
 
-    void visit(BaseEntity& entity) override
-    {
-       
-    }
 
-    void visit(StaticEntity& entity) override
-    {
-      
-    }
 
-    void visit(CompoundEntity& entity) override
-    {
-       
-    }
+    void visit(BaseEntity& entity) override;
+
+    void visit(StaticEntity& entity) override;
+
+    void visit(CompoundEntity& entity) override;
+
+   void finish() override;
 
 protected:
-    void traverse(BaseEntity& e) override
-    {
-        e.traverse(*this);
-    }
+    void traverse(BaseEntity& e) override;
 };
 } // namespace msge::plugin

@@ -57,6 +57,7 @@ private:
     std::unique_ptr<CorePluginManager>            pluginManager;
     std::unique_ptr<plugins::PluginRegistry>      pluginRegistry;
     std::map<SceneId, std::unique_ptr<BaseScene>> rootScenes;
+    
 };
 
 

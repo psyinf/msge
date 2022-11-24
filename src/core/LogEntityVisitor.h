@@ -27,7 +27,7 @@ public:
         print(fmt::format("Compound: {}", entity.id));
         traverse(entity);
     }
-
+    void finish() override{};
 
    
 

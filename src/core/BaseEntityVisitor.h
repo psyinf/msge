@@ -15,6 +15,7 @@ public:
     virtual void visit(BaseEntity& entity) = 0;
 	virtual void visit(StaticEntity& entity) = 0;
     virtual void visit(CompoundEntity& entity) = 0;
+    virtual void finish()                      = 0;
 
 protected:
     virtual void traverse(BaseEntity&)         = 0;

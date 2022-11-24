@@ -1,7 +1,9 @@
 #pragma once
 #include <BaseEntity.h>
 #include <BaseEntityVisitor.h>
+#include <Spatial.h>
 
+#include <ranges>
 namespace msge
 {
 class BaseEntity;
@@ -28,6 +30,7 @@ public:
     {
         children.emplace_back(c);
     }
+    Spatial spatial;
 
 
 private:

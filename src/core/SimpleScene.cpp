@@ -24,4 +24,5 @@ bool SimpleScene::hasEntity(const EntityId& entityId)
 void SimpleScene::runVisitor(BaseEntityVisitor& visitor)
 {
    std::ranges::for_each(entities, [&visitor](const auto& e) { e->accept(visitor); });
+    visitor.finish();
 }
