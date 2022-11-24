@@ -29,7 +29,7 @@ try
     auto& scene = core.getScene("root");
     // static entity
     scene.addEntity(makeStaticEntity("se1", Spatial{gmtl::Point3d{0, 0, 0}}));
-    scene.addEntity(makeStaticEntity("se1", Spatial{gmtl::Point3d{1, 0, 0}}));
+    scene.addEntity(makeStaticEntity("se2", Spatial{gmtl::Point3d{1, 0, 0}}));
 
     auto jsonSerializer = core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core);
     scene.runVisitor(*jsonSerializer);
