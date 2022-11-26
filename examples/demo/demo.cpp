@@ -1,8 +1,9 @@
 #include "Core.h"
 #include "CoreConfig.h"
 
-#include <StaticEntity.h>
-#include <CompoundEntity.h>
+#include <SerializationBuffer.h>
+#include <entities/StaticEntity.h>
+#include <entities/CompoundEntity.h>
 
 #include <plugins/PluginRegistry.h>
 #include <exception>
@@ -21,6 +22,13 @@ auto makeStaticEntity(std::string_view name, const Spatial& s)
 auto makeGroup(std::string_view name)
 {
    return std::make_shared<CompoundEntity>(name);
+}
+
+void getMsg(msge::EntitySerializationBuffer&& buf)
+{
+   std::cout << buf.key << "\n";
+   std::cout << std::string(buf.buffer.begin(), buf.buffer.end()) << "\n";
+   
 }
 
 int main(int argc, char** argv)
@@ -45,6 +53,7 @@ try
     g2->addChildren(makeStaticEntity("sge2", Spatial{}));
    
     auto jsonSerializer =  core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core);
+    jsonSerializer->setSink(getMsg);
     scene.runVisitor(*jsonSerializer);
 
 

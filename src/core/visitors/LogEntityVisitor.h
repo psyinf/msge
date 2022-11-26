@@ -1,7 +1,7 @@
 #pragma once
-#include <BaseEntityVisitor.h>
-#include <CompoundEntity.h>
-#include <StaticEntity.h>
+#include <visitors/BaseEntityVisitor.h>
+#include <entities/CompoundEntity.h>
+#include <entities/StaticEntity.h>
 
 #include <fmt/core.h>
 namespace msge

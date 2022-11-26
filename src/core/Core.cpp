@@ -7,7 +7,7 @@
 #include <plugins/CorePluginInterface.h>
 #include "plugins/PluginManager.h"
 #include <fmt/core.h>
-#include <SimpleScene.h>
+#include <scenes/SimpleScene.h>
 
 using namespace msge;
 

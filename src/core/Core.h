@@ -1,11 +1,11 @@
 #pragma once
 
-#include <BaseScene.h>
 #include <array>
 #include <filesystem>
 #include <glog/logging.h>
 #include <iostream>
 #include <map>
+#include <scenes/BaseScene.h>
 #include <string>
 #include <vector>
 
@@ -57,7 +57,6 @@ private:
     std::unique_ptr<CorePluginManager>            pluginManager;
     std::unique_ptr<plugins::PluginRegistry>      pluginRegistry;
     std::map<SceneId, std::unique_ptr<BaseScene>> rootScenes;
-    
 };
 
 

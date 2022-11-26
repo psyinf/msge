@@ -1,6 +1,6 @@
 #pragma once
-#include <BaseEntityVisitor.h>
-#include <CoreEntityVisitor.h>
+#include <visitors/BaseEntityVisitor.h>
+#include <visitors/CoreEntityVisitor.h>
 #include <FactoryRegistry.h>
 
 

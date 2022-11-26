@@ -1,5 +1,5 @@
 #pragma once
-#include <BaseScene.h>
+#include <scenes/BaseScene.h>
 #include <vector>
 
 namespace msge

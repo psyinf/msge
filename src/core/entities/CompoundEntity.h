@@ -1,6 +1,6 @@
 #pragma once
-#include <BaseEntity.h>
-#include <BaseEntityVisitor.h>
+#include <entities/BaseEntity.h>
+#include <visitors/BaseEntityVisitor.h>
 #include <Spatial.h>
 
 #include <ranges>

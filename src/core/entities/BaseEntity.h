@@ -1,5 +1,5 @@
 #pragma once
-#include <BaseEntityVisitor.h>
+#include <visitors/BaseEntityVisitor.h>
 #include <CoreDefinitions.h>
 #include <FrameStamp.h>
 #include <Spatial.h>

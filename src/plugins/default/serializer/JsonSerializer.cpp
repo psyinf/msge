@@ -3,77 +3,54 @@
 
 #include <nlohmann/json.hpp>
 #include <stack>
+#include <vector>
 
 using namespace msge;
 using namespace nlohmann;
 
-auto child_field = "sub";
-
-class JsonSink
+EntitySerializationBuffer convert(nlohmann::json&& json, const EntityId& id)
 {
-public:
-    JsonSink() {
-        json scene_root;
-        scene_root["id"] = "scene_root";
-        scene_root[child_field] = json::array();
-        objects.push(scene_root);
-    }
-    void add(const nlohmann::json& t)
-    {
-        objects.top().at(child_field).push_back(t);
-    }
-    void push() {
-        //we borrow the last element in the children 
-        auto borrowed = std::move(objects.top().at(child_field).back());
-        objects.push(std::move(borrowed));
-    }
-    void pop()
-    {
-        auto borrowed = std::move(objects.top());
-        objects.pop();
-        objects.top().at(child_field).back() = std::move(borrowed);
-    }
-    std::stack<nlohmann::json> objects;
-    
+    auto c_s = json.dump();
 
-    void write() {
-        std::ofstream f{"out.bin"};
-        f << objects.top();
-    }
-};
-JsonSink js;
+    uint8_t* u = std::bit_cast<uint8_t*>(c_s.data());
+    auto     v = std::vector<uint8_t>(u, u + c_s.size());
+    return {id, v};
+}
 
 void plugin::JsonSerializer::traverse(BaseEntity& e)
 {
-    js.push();
+    idStack.push(e.id);
     e.traverse(*this);
-    js.pop();
+    idStack.pop();
 }
 
 void plugin::JsonSerializer::visit(CompoundEntity& entity)
 {
-    nlohmann::json ejson;
-
-   
-    ejson["id"] = std::string_view(entity.id);
-    ejson[child_field] = json::array();
-    js.add(ejson);
+    nlohmann::json c;
+    c["id"] = entity.id;
+    c["spatial.x"] = entity.spatial.position[0];
+    
+    sink(convert(std::move(c),entity.id));
     traverse(entity);
 
 }
 
 void plugin::JsonSerializer::visit(StaticEntity& entity)
 {
-    nlohmann::json ejson;
-    ejson["id"] = std::string_view(entity.id);
-    js.add(ejson);
+    nlohmann::json c;
+    c["id"]        = entity.id;
+    c["spatial.x"] = entity.spatial.position[0];
+
+    sink(convert(std::move(c), entity.id));
 }
 
 void plugin::JsonSerializer::visit(BaseEntity& entity)
 {
-    nlohmann::json ejson;
-    ejson["id"] = std::string_view(entity.id);
-    js.add(ejson);
+    nlohmann::json c;
+    c["id"]        = entity.id;
+   
+
+    sink(convert(std::move(c), entity.id));
 }
 
 plugin::JsonSerializer::JsonSerializer(Core& core)
@@ -84,5 +61,5 @@ plugin::JsonSerializer::JsonSerializer(Core& core)
 
 void plugin::JsonSerializer::finish()
 {
-    js.write();
+   
 }

@@ -1,6 +1,6 @@
-#include "SimpleScene.h"
-#include "BaseEntityVisitor.h"
-#include <BaseEntity.h>
+#include <scenes/SimpleScene.h>
+#include <visitors/BaseEntityVisitor.h>
+#include <entities/BaseEntity.h>
 
 
 #include <algorithm>
