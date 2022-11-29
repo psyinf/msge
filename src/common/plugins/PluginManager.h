@@ -4,7 +4,7 @@
 #include "strings/StringTools.h"
 #include <glog/logging.h>
 #include <filesystem>
-#include <format>
+
 #include <iostream>
 #include <map>
 #include <memory>
@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include <fmt/core.h>
 namespace common
 {
 
@@ -30,12 +31,14 @@ public:
         return std::make_shared<PluginBaseClass>(entry.path().string());
     }
 
+
     void scanForPlugins(const std::string& path, const std::vector<std::string>& filters)
     {
         std::ranges::for_each(
-            filters, [](const auto& filter) { scanForPlugins(path, filter); });
+            filters, [&path](const auto& filter) { scanForPlugins(path, filter); });
     }
 
+    [[maybe_unused]] 
     size_t scanForPlugins(const std::string& path, const std::string& filter = "*.dll")
     {
         size_t num_loaded = 0;
@@ -45,7 +48,7 @@ public:
         {
             auto file_path       = p.path().filename().string();
             auto file_path_noext = p.path().filename().replace_extension("").string();
-            file_path_noext | std::ranges::views::transform([](auto c) { return std::toupper(c); });
+           
 
             if (!Strings::matchesWildCard(file_path, filter))
             {
@@ -71,18 +74,18 @@ public:
                     plugin->getInfo(plugin_info);
                     if (!mPlugins.count(plugin_info))
                     {
-                        LOG(INFO) << std::format("Found plugin {} [{}]", file_path, plugin_info.name);
+                        LOG(INFO) << fmt::format("Found plugin {} [{}]", file_path, plugin_info.name);
                         mPlugins[plugin_info] = plugin;
                         ++num_loaded;
                     }
                     else
                     {
-                        LOG(WARNING) << std::format("Skipping plugin {} [{}], already registered.", file_path, plugin_info.name);
+                        LOG(WARNING) << fmt::format("Skipping plugin {} [{}], already registered.", file_path, plugin_info.name);
                     }
                 }
                 catch (const std::exception& e)
                 {
-                    LOG(ERROR) << std::format("Error loading plugin {}: {}", p.path().string(), e.what());
+                    LOG(ERROR) << fmt::format("Error loading plugin {}: {}", p.path().string(), e.what());
                 }
             }
         }

@@ -18,8 +18,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "103eb085e7fcefcf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Idea and Storyline/Alone.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -85,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Concepts.md",
+                "file": "Idea and Storyline/Alone.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Concepts.md",
+                "file": "Idea and Storyline/Alone.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Concepts.md"
+                "file": "Idea and Storyline/Alone.md"
               }
             }
           }
@@ -139,6 +152,8 @@
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "3e4cf57f97b9db7c",
-  "lastOpenFiles": []
+  "active": "103eb085e7fcefcf",
+  "lastOpenFiles": [
+    "Concepts.md"
+  ]
 }

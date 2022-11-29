@@ -10,7 +10,10 @@ add_executable(${TESTPACKAGE} StringToolsTest.cpp)
 
 target_link_libraries(${TESTPACKAGE} 
 	PRIVATE
-		GTest::GTest 
+		GTest::gtest 
+		GTest::gtest_main
+		#GTest::gmock
+		#GTest::gmock_main
 		${PROJECT_NAMESPACE}::common
 )
 

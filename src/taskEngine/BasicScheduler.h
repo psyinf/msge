@@ -1,5 +1,6 @@
 #pragma once 
 #include "AbstractScheduler.h"
+#include <atomic>
 
 namespace msge{
 

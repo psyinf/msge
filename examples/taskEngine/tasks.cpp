@@ -7,8 +7,9 @@
 #include <iostream>
 #include <future>
 #include <ranges>
+#include <thread>
 
-
+#include <fmt/core.h>
 using namespace msge;
 
 class TestTaskA : public AbstractSchedulerTask
@@ -22,7 +23,7 @@ public:
 
     void run(const FrameStamp& frameStamp) override
     {
-      //  std::cout << std::format("Running {}\n", getProperties().taskId);
+      //  std::cout << fmt::format("Running {}\n", getProperties().taskId);
         std::this_thread::sleep_for(std::chrono::milliseconds(16 * 10));
     }
 };
@@ -38,11 +39,11 @@ public:
 
     void run(const FrameStamp& frameStamp) override
     {
-      //  std::cout << std::format("Running {}\n", getProperties().taskId);
+      //  std::cout << fmt::format("Running {}\n", getProperties().taskId);
         if (frameStamp.frameNumber == 100)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(250));
-          //  std::cout << std::format("Ending and unscheduling {}\n", getProperties().taskId);
+          //  std::cout << fmt::format("Ending and unscheduling {}\n", getProperties().taskId);
             getProperties().reschedule = false;
         }
     }
@@ -103,11 +104,11 @@ void onFrameEnd(const SchedulerRunInfo& runInfo)
     {
         return;
     }
-    std::cout << std::format("num tasks: {:04d}---------# {:05d}\n", runInfo.numTasksRun, runInfo.frameNumber);
+    std::cout << fmt::format("num tasks: {:04d}---------# {:05d}\n", runInfo.numTasksRun, runInfo.frameNumber);
     //std::cout << runInfo.lastFrameDuration << "\n";
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.getDuration()) << ")\n";
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(runInfo.frameTiming.timeBetweenFrames(runInfo.previousFrameTiming)) << ")\n";
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.totalFrameTime(runInfo.previousFrameTiming)) << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.getDuration()).count() << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(runInfo.frameTiming.timeBetweenFrames(runInfo.previousFrameTiming)).count() << ")\n";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(runInfo.frameTiming.totalFrameTime(runInfo.previousFrameTiming)).count() << ")\n";
    
     
 

@@ -3,6 +3,7 @@ set(PROJECT MSGE)
 project(${PROJECT} VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 
 set(CMAKE_DEBUG_POSTFIX _d)
 set(CMAKE_RELWITHDEBINFO_POSTFIX _rd)
@@ -22,21 +23,21 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/../install  CACHE PATH <comment> FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-install(EXPORT ${PROJECT_EXPORT_NAME} 
-	FILE
-		${PROJECT_EXPORT_NAME}Targets.cmake
-	NAMESPACE
-		${PROJECT_NAMESPACE}::
-	DESTINATION
-		${CMAKE_INSTALL_ARCHIVEDIR}/cmake/${PROJECT_EXPORT_NAME}
-	COMPONENT
-		${DEVELOP_COMPONENT}
-)
+#install(EXPORT ${PROJECT_EXPORT_NAME} 
+#	FILE
+#		${PROJECT_EXPORT_NAME}Targets.cmake
+#	NAMESPACE
+#		${PROJECT_NAMESPACE}::
+#	DESTINATION
+#		${CMAKE_INSTALL_ARCHIVEDIR}/cmake/${PROJECT_EXPORT_NAME}
+#	COMPONENT
+#		${DEVELOP_COMPONENT}
+#)
 
 
-list(APPEND CMAKE_MODULE_PATH
-	"${CMAKE_SOURCE_DIR}/cmake/"
-)
+#list(APPEND CMAKE_MODULE_PATH
+#	"${CMAKE_SOURCE_DIR}/cmake/"
+#)
 
 if(WIN32)
     add_compile_definitions(WINDOWS=1)
@@ -53,8 +54,9 @@ add_subdirectory(examples)
 #TESTS
 add_subdirectory(src/common_tests)
 
-add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       
-
+if(WIN32)
+ add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       
+endif()
 
 #for now
 install(DIRECTORY

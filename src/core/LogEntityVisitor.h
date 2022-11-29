@@ -3,6 +3,7 @@
 #include <CompoundEntity.h>
 #include <StaticEntity.h>
 
+#include <fmt/core.h>
 namespace msge
 {
 
@@ -13,17 +14,17 @@ class LogEntityVisitor : public BaseEntityVisitor
 public:
     void visit(BaseEntity& entity) override
     {
-        print(std::format("Base: {}", entity.id));
+        print(fmt::format("Base: {}", entity.id));
     }
 
     void visit(StaticEntity& entity) override
     {
-        print(std::format("Static: {}", entity.id));
+        print(fmt::format("Static: {}", entity.id));
     }
 
     void visit(CompoundEntity& entity) override
     {
-        print(std::format("Compound: {}", entity.id));
+        print(fmt::format("Compound: {}", entity.id));
         traverse(entity);
     }
 
