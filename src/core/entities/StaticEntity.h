@@ -1,5 +1,5 @@
 #pragma once
-#include <BaseEntity.h>
+#include <entities/BaseEntity.h>
 
 namespace msge
 {

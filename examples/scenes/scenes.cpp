@@ -1,7 +1,7 @@
 #include <Core.h>
-#include <LogEntityVisitor.h>
-#include <SimpleScene.h>
-#include <StaticEntity.h>
+#include <visitors/LogEntityVisitor.h>
+#include <scenes/SimpleScene.h>
+#include <entities/StaticEntity.h>
 #include <exception>
 #include <iostream>
 #include <memory>

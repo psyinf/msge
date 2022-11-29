@@ -1,4 +1,5 @@
 #include "Core.h"
+#include "CoreConfig.h"
 
 #include "Spatial.h"
 
@@ -6,6 +7,7 @@
 #include <plugins/CorePluginInterface.h>
 #include "plugins/PluginManager.h"
 #include <fmt/core.h>
+#include <scenes/SimpleScene.h>
 
 using namespace msge;
 
@@ -38,20 +40,22 @@ Core::CommandLineArgs Core::makeCommandLineArgs(int argc, char** argv)
     return CommandLineArgs(argv, argv + argc);
 }
 
-void Core::setup(const Config& config, const CommandLineArgs& args)
+void Core::setup(const CoreConfig& config, const CommandLineArgs& args)
 {
     initializeLogging(args);
+
     pluginManager->scanForPlugins(config.plugins_path);
-    //#TODO remove DEBUG code for testing: intialize plugins and move this to a "smoke"test
-    for (auto& [k, v] : pluginManager->getPluginList())
+  
+    for (const auto& [k, v] : pluginManager->getPluginList())
     {
         v->registerPlugin(*pluginRegistry);
-    } 
-    auto jsonSerializer = pluginRegistry->getCoreVisitorPrototype("JsonSerializer", *this);
-    
+    }    
+
+    //scenes from configuration
+    rootScenes.insert({SceneId(config.default_scene), std::make_unique<SimpleScene>("root")});
 }
 
-Core::Core(const Config& config, const CommandLineArgs& args)
+Core::Core(const CoreConfig& config, const CommandLineArgs& args)
     : pluginRegistry(std::make_unique<plugins::PluginRegistry>())
     , pluginManager(std::make_unique<CorePluginManager>())
 {

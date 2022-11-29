@@ -1,5 +1,5 @@
 #include "Core.h"
-
+#include "CoreConfig.h"
 #include <exception>
 #include <iostream>
 
@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 try
 {
     /* Setup the core instance. Pass a configuration item and some command line arguments.*/
-    Core core(Core::Config(), Core::makeCommandLineArgs(argc, argv));
+    Core core(CoreConfig(), Core::makeCommandLineArgs(argc, argv));
     
 }
 catch (const std::exception& e)

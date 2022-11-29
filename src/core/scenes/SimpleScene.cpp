@@ -1,6 +1,6 @@
-#include "SimpleScene.h"
-#include "BaseEntityVisitor.h"
-#include <BaseEntity.h>
+#include <scenes/SimpleScene.h>
+#include <visitors/BaseEntityVisitor.h>
+#include <entities/BaseEntity.h>
 
 
 #include <algorithm>
@@ -24,4 +24,5 @@ bool SimpleScene::hasEntity(const EntityId& entityId)
 void SimpleScene::runVisitor(BaseEntityVisitor& visitor)
 {
    std::ranges::for_each(entities, [&visitor](const auto& e) { e->accept(visitor); });
+    visitor.finish();
 }

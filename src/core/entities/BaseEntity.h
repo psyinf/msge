@@ -1,5 +1,5 @@
 #pragma once
-#include <BaseEntityVisitor.h>
+#include <visitors/BaseEntityVisitor.h>
 #include <CoreDefinitions.h>
 #include <FrameStamp.h>
 #include <Spatial.h>
@@ -10,7 +10,8 @@ namespace msge
 {
 
 /**
- * Base for entities. No spatial properties
+ * Base for entities. No spatial properties. 
+ * #TODO maybe make virtual base class.
  */
 class BaseEntity
 {
@@ -24,7 +25,7 @@ public:
     {
         bev.visit(*this);
     }
-    virtual void traverse(BaseEntityVisitor& bev)
+    virtual void traverse(BaseEntityVisitor& bev) 
     {
         //implement for grouping entities
     }
