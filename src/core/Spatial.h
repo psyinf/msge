@@ -4,6 +4,7 @@
 
 #include <glog/logging.h>
 #include <gmtl/gmtl.h>
+
 namespace msge{
 	
 /**
@@ -35,5 +36,6 @@ class Kinematic : public Dynamic
     gmtl::Vec3d acceleration;
     gmtl::Vec3d rot_acceleration;
 };
+
 
 } //namespace msge

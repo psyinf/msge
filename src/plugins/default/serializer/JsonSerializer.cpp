@@ -1,9 +1,12 @@
 #include "JsonSerializer.h"
 #include <Core.h>
+#include <serializers/gmtlJsonSerializer.h>
+#include <serializers/SpatialJsonSerializer.h>
 
 #include <nlohmann/json.hpp>
 #include <stack>
 #include <vector>
+
 
 using namespace msge;
 using namespace nlohmann;
@@ -28,7 +31,7 @@ void plugin::JsonSerializer::visit(CompoundEntity& entity)
 {
     nlohmann::json c;
     c["id"] = entity.id;
-    c["spatial.x"] = entity.spatial.position[0];
+    c["spatial"] = entity.spatial;
     
     sink(convert(std::move(c),entity.id));
     traverse(entity);
@@ -39,7 +42,7 @@ void plugin::JsonSerializer::visit(StaticEntity& entity)
 {
     nlohmann::json c;
     c["id"]        = entity.id;
-    c["spatial.x"] = entity.spatial.position[0];
+    c["spatial"] = entity.spatial;
 
     sink(convert(std::move(c), entity.id));
 }
