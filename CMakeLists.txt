@@ -52,6 +52,7 @@ add_subdirectory(src/plugins)
 #EXAMPLES
 add_subdirectory(examples)
 #TESTS
+enable_testing()
 add_subdirectory(src/common_tests)
 
 if(WIN32)
