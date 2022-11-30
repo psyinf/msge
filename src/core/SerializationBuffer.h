@@ -19,8 +19,9 @@ public:
 
 
 
+//TODO: use a fixed/limited size string representation
+using EntityPath   = std::string;
 
-using EntityKey   = FixedString < 64>;
 using EntityBuffer = std::vector<std::uint8_t>;
-using EntitySerializationBuffer = SerializationBuffer<EntityKey, EntityBuffer>;
+using EntitySerializationBuffer = SerializationBuffer<EntityPath, EntityBuffer>;
 }

@@ -5,7 +5,7 @@
 
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <stack>
+#include <deque>
 
 
 namespace msge
@@ -16,12 +16,15 @@ class Core;
 namespace msge::plugin
 {
 
+/**
+ * Serializer that converts a list of entities individually. 
+ */
 
 class JsonSerializer : public CoreEntityVisitor
 {
-
-
 public:
+    using IdStack  = std::deque<EntityId>;
+
     JsonSerializer(Core& core);
 
 
@@ -37,6 +40,6 @@ protected:
     void traverse(BaseEntity& e) override;
 
 private:
-    std::stack<EntityId> idStack;
+    IdStack idStack;
 };
 } // namespace msge::plugin
