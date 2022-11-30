@@ -69,7 +69,7 @@ public:
 
     size_t size() const { return content_view.size(); }
 
-    const auto data() const
+    const auto* data() const
     {
         return content.data();
     };

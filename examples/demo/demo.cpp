@@ -56,6 +56,7 @@ try
     jsonSerializer->setSink(getMsg);
     scene.runVisitor(*jsonSerializer);
 
+    //TODO: put serializer into a task and some task to modify an entity (group with children) every frame
 
    
     //

@@ -3,7 +3,7 @@
 #include <Core.h>
 #include <nlohmann/json.hpp>
 #include <serializers/SpatialJsonSerializer.h>
-#include <serializers/gmtlJsonSerializer.h>
+#include <serializers/GmtlJsonSerializer.h>
 #include <stack>
 #include <vector>
 
@@ -60,7 +60,6 @@ void plugin::JsonSerializer::visit(BaseEntity& entity)
 {
     nlohmann::json c;
     c["id"] = entity.id;
-
 
     sink(convert(c, buildPath(idStack, entity.id)));
 }
