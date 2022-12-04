@@ -21,7 +21,7 @@ public:
 
     static auto proto()
     {
-        return [](A... a) { return std::make_unique<T>(T(a...)); };
+        return [](A... a) { return std::make_unique<T>(a...); };
     }
 
     GenericFactory()  = default;
