@@ -7,7 +7,12 @@
 #include <plugins/CorePluginInterface.h>
 #include "plugins/PluginManager.h"
 #include <fmt/core.h>
+#include <AbstractScheduler.h>
+#include <AbstractTaskQueue.h>
 #include <scenes/SimpleScene.h>
+
+
+
 
 using namespace msge;
 
@@ -48,11 +53,15 @@ void Core::setup(const CoreConfig& config, const CommandLineArgs& args)
   
     for (const auto& [k, v] : pluginManager->getPluginList())
     {
-        v->registerPlugin(*pluginRegistry);
+        v->registerPlugin(*this);
     }    
 
     //scenes from configuration
     rootScenes.insert({SceneId(config.default_scene), std::make_unique<SimpleScene>("root")});
+
+    scheduler = schedulerPrototypes.getPrototype(config.scheduler_name)();
+    taskQueue = taskQueuePrototypes.getPrototype(config.task_queue_name)();
+    scheduler->setTaskQueue(taskQueue);
 }
 
 Core::Core(const CoreConfig& config, const CommandLineArgs& args)
@@ -62,7 +71,16 @@ Core::Core(const CoreConfig& config, const CommandLineArgs& args)
     setup(config, args);
 }
 
+void Core::addTask(std::string_view name, std::function<void(const FrameStamp&)> f)
+{
+    taskQueue->addTask(std::make_unique<FunctionTask>(f, TaskProperties{std::string(name)}));
+}
 
+std::future<void> Core::start()
+{
+    scheduler->start();
+    return std::async(std::launch::async, [this]() { scheduler->run(); });   
+}
 
 Core::~Core() = default;
 

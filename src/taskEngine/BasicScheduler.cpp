@@ -13,7 +13,7 @@
 
 using namespace msge;
 
-void BasicScheduler::frame() 
+void BasicScheduler::run() 
 {
     using Clock = std::chrono::high_resolution_clock;
 
@@ -26,7 +26,7 @@ void BasicScheduler::frame()
     while (isRunning)
     {
         auto       frame_start = Clock::now();
-        FrameStamp f = {frameNumber, std::chrono::milliseconds(16)};
+        auto f = FrameStamp{frameNumber, std::chrono::milliseconds(16)};
         while (taskQueue->hasNext())
         {
             auto& task       = taskQueue->getNext();

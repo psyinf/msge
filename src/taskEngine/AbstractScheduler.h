@@ -70,7 +70,7 @@ public:
     };
 
     virtual void setTaskQueue(std::shared_ptr<AbstractTaskQueue> task) = 0;
-    virtual void frame()                                               = 0;
+    virtual void run()                                               = 0;
     virtual void start()                                               = 0;
     virtual void stop()                                                = 0;
 

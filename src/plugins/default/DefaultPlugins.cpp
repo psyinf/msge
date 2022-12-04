@@ -1,17 +1,13 @@
 #include <glog/logging.h>
-#include <plugins/PluginBase.h>
-#include <plugins/PluginRegistry.h>
-#include <serializer/JsonSerializer.h>
-
-#include <iomanip>
-#include <string>
+#include <serializer/register.h>
+#include <taskengine/register.h>
 
 
 //TODO move to a macro
 #ifdef _WIN32
-#define CONTROLLER_PLUGIN_API _declspec(dllexport)
+#define DEFAULT_PLUGIN_API _declspec(dllexport)
 #elif __linux__
-#define CONTROLLER_PLUGIN_API
+#define DEFAULT_PLUGIN_API
 #endif
 
 namespace msge
@@ -23,23 +19,15 @@ class Core;
 
 const static std::string pluginName = "DefaultPlugin";
 
-extern "C" CONTROLLER_PLUGIN_API void getInfo(common::PluginInfo& info)
+extern "C" DEFAULT_PLUGIN_API void getInfo(common::PluginInfo& info)
 {
     info.name = pluginName;
 }
 
-extern "C" CONTROLLER_PLUGIN_API void registerPlugin(msge::plugins::PluginRegistry& registry)
+extern "C" DEFAULT_PLUGIN_API void registerPlugin(msge::Core& core)
 {
-    try
-    {
-        auto proto = common::GenericFactory<msge::plugin::JsonSerializer, msge::Core&>::proto();
-        
-        registry.registerPlugin("JsonSerializer", proto);
-        LOG(INFO) << "registered plugin "
-                  << "JsonSerializer";
-    }
-    catch (const std::exception& e)
-    {
-        LOG(ERROR) << "Error registering plugin " << std::quoted(pluginName) << ": " << e.what();
-    }
+    auto registered_plugins = registerPlugins(core);
+    LOG(INFO) << fmt::format("Registered serializers(s): [ {} ]\n ", fmt::join(registered_plugins, " | "));
+    auto registered_schedulers = registerSchedulers(core);
+    LOG(INFO) << fmt::format("Registered schedulers(s): [ {} ]\n ", fmt::join(registered_schedulers, " | "));
 }

@@ -20,3 +20,4 @@ std::unique_ptr<msge::CoreEntityVisitor> msge::plugins::PluginRegistry::getCoreV
 {
     return coreVisitorFactory.make(name, core);
 }
+
