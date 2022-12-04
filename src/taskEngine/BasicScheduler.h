@@ -9,7 +9,7 @@ class BasicScheduler : public AbstractScheduler
 public:
     ~BasicScheduler() override = default;
 
-    void run() override;
+    void frame() override;
 
     void setTaskQueue(std::shared_ptr<AbstractTaskQueue> taskQueue) override;
 

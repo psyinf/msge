@@ -13,7 +13,7 @@
 
 using namespace msge;
 
-void BasicScheduler::run() 
+void BasicScheduler::frame() 
 {
     using Clock = std::chrono::high_resolution_clock;
 

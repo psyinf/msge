@@ -146,7 +146,7 @@ try
     
     auto s = std::jthread([&]{ std::this_thread::sleep_for(std::chrono::seconds(60)); scheduler.stop(); });
     
-    scheduler.run();
+    scheduler.frame();
     
     
 

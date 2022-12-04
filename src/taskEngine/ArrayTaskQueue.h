@@ -19,7 +19,7 @@ public:
 
     void addTask(Task&& task) override;
 
-    void removeTask(TaskId taskId) override;
+    void removeTask(const TaskId& taskId) override;
 
     AbstractSchedulerTask& getNext() override;
 
