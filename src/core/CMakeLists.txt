@@ -29,9 +29,10 @@ target_link_libraries(${LIB_NAME}
 		fmt::fmt
 		nlohmann_json::nlohmann_json
 		
-	PRIVATE
 		${PROJECT_NAMESPACE}::taskEngine
 		${PROJECT_NAMESPACE}::common
+	PRIVATE
+
 		magic_enum::magic_enum
 )
 target_include_directories(${LIB_NAME}

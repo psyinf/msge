@@ -14,8 +14,6 @@ add_executable(${APP_NAME}
 target_link_libraries (${APP_NAME} 
 	PRIVATE				
 		${PROJECT_NAMESPACE}::core
-		${PROJECT_NAMESPACE}::common
-		${PROJECT_NAMESPACE}::taskEngine
 )
 
 target_include_directories(${APP_NAME}
