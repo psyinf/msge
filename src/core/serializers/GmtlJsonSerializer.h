@@ -28,4 +28,15 @@ inline void from_json(const nlohmann::json& j, Quatd& q)
     j.get_to(q.mData);
 }
 
+template <typename DATA_TYPE, typename ROTATION_ORDER>
+inline void to_json(nlohmann::json& j, const EulerAngle < DATA_TYPE, ROTATION_ORDER> &e)
+{
+    j = nlohmann::json::array({*e.getData()});
+}
+template <typename DATA_TYPE, typename ROTATION_ORDER>
+inline void from_json(const nlohmann::json& j, EulerAngle<DATA_TYPE, ROTATION_ORDER>& e)
+{
+    j.get_to(*e.getData());
+}
+
 }

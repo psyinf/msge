@@ -21,7 +21,7 @@ class Spatial
 {
 public:
 	gmtl::Vec3d position;
-    gmtl::Quatd orientation;
+    gmtl::EulerAngleZXYd orientation;
 };
 
 /**
@@ -29,6 +29,7 @@ public:
  */
 class Dynamic : public Spatial
 {
+public:
     void        derive(const Spatial& prev, Spatial current, std::chrono::seconds) {
         throw NotImplementedException("Not implemented");
     }
@@ -41,6 +42,7 @@ class Dynamic : public Spatial
  */
 class Kinematic : public Dynamic
 {
+public:
     void        derive(const Dynamic& prev, Dynamic current, std::chrono::seconds) {
         throw NotImplementedException("Not implemented");
     }
