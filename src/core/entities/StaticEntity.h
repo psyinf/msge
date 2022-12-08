@@ -15,6 +15,6 @@ public:
         bev.visit(*this);
     }
 
-    Spatial spatial;
+    common::math::Spatial spatial;
 };
 } // namespace msge

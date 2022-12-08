@@ -1,7 +1,7 @@
 #include "Core.h"
 #include "CoreConfig.h"
 
-#include "Spatial.h"
+#include <math/Spatial.h>
 
 #include "plugins/PluginRegistry.h"
 #include <plugins/CorePluginInterface.h>

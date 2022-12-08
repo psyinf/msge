@@ -1,7 +1,7 @@
 #pragma once
 #include <entities/BaseEntity.h>
 #include <visitors/BaseEntityVisitor.h>
-#include <Spatial.h>
+#include <math/Spatial.h>
 
 #include <ranges>
 namespace msge
@@ -30,7 +30,7 @@ public:
     {
         children.emplace_back(c);
     }
-    Spatial spatial;
+    common::math::Spatial spatial;
 
 
 private:

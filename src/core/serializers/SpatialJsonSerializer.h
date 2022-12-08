@@ -1,7 +1,7 @@
 #pragma once
 #include <serializers/GmtlJsonSerializer.h>
-#include <Spatial.h>
-namespace msge
+#include <math/Spatial.h>
+namespace common::math
 {
 
 inline void to_json(nlohmann::json& j, const Spatial& s)
