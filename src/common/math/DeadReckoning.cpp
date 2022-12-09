@@ -1,11 +1,7 @@
 #include "DeadReckoning.h"
 
 
-double toSeconds(std::chrono::milliseconds delta)
-{
-    std::chrono::duration<double, std::milli> t = delta;
-    return t.count();
-}
+
 
 common::math::Spatial common::math::DeadReckoning::extrapolateRPW(const Kinematic& s, std::chrono::milliseconds delta_t)
 {
