@@ -43,7 +43,7 @@ void plugin::JsonSerializer::visit(CompoundEntity& entity)
     c["id"]      = entity.id;
     c["spatial"] = entity.spatial;
 
-    sink(convert(c, buildPath(idStack, entity.id)));
+    getSink()(convert(c, buildPath(idStack, entity.id)));
     traverse(entity);
 }
 
@@ -53,7 +53,7 @@ void plugin::JsonSerializer::visit(StaticEntity& entity)
     c["id"]      = entity.id;
     c["spatial"] = entity.spatial;
 
-    sink(convert(c, buildPath(idStack, entity.id)));
+    getSink()(convert(c, buildPath(idStack, entity.id)));
 }
 
 void plugin::JsonSerializer::visit(BaseEntity& entity)
@@ -61,7 +61,7 @@ void plugin::JsonSerializer::visit(BaseEntity& entity)
     nlohmann::json c;
     c["id"] = entity.id;
 
-    sink(convert(c, buildPath(idStack, entity.id)));
+    getSink()(convert(c, buildPath(idStack, entity.id)));
 }
 
 plugin::JsonSerializer::JsonSerializer(Core& core)

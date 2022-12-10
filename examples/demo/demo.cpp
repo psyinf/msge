@@ -15,6 +15,8 @@
 #include <math/DeadReckoning.h>
 
 using namespace msge;
+
+/*Very simple dynamic entity*/
 class Mover : public DynamicEntity
 {
 public:
@@ -22,11 +24,30 @@ public:
     // move along some simple path
     void frame(const FrameStamp& fs)
     {
-        spatial.position += spatial.velocity * common::math::DeadReckoning::toSeconds(fs.frameTime);
-        std::cout << spatial.position[2] << std::endl;
+       
+        gmtl::AABoxd box(gmtl::Vec3d{-100,-100,-100}, {100,100,100});
+        auto&      velocity = spatial.velocity;
+        auto& trans    = spatial.position;
+        trans += velocity * common::math::DeadReckoning::toSeconds(fs.frameTime);
+        for (auto i : {0,1,2})
+        {
+            if (trans[i] > box.mMax[i])
+            {
+                trans[i]    = box.mMax[i];
+                velocity[i] = -velocity[i];
+            }
+            else if (trans[i] < box.mMin[i])
+            {
+                trans[i]    = box.mMin[i];
+                velocity[i] = -velocity[i];
+            }
+        }
+        if (fs.frameNumber % 1000)
+        {
+            std::cout << spatial.position << std::endl;
+        }
     }
 };
-
 
 
 auto makeMover(std::string_view name, common::math::Dynamic&& s)
@@ -35,8 +56,9 @@ auto makeMover(std::string_view name, common::math::Dynamic&& s)
     e->spatial = std::move(s);
     return e;
 }
+
 //TODO: add to scene and retrieve via visitor
-auto m = makeMover("m1", common::math::Dynamic{.velocity{0,0,0.001}});
+auto m = makeMover("m1", common::math::Dynamic{.velocity{0,0,1}});
 auto makeStaticEntity(std::string_view name, const common::math::Spatial& s)
 {
     auto e     = std::make_shared<StaticEntity>(name);
@@ -49,7 +71,7 @@ auto makeGroup(std::string_view name)
     return std::make_shared<CompoundEntity>(name);
 }
  
-void getMsg(msge::EntitySerializationBuffer&& buf)
+void getMsg(const msge::EntitySerializationBuffer& buf)
 {
     std::cout << buf.key << "\n";
     std::cout << std::string(buf.buffer.begin(), buf.buffer.end()) << "\n";

@@ -19,7 +19,7 @@ public:
     //static Spatial extrapolate(const Spatial& s, std::chrono::milliseconds delta_t, Type type = Type::FPW);
     static double  toSeconds(std::chrono::milliseconds delta)
     {
-        std::chrono::duration<double, std::kilo> t = delta;
+        std::chrono::duration<double, std::ratio<1,1>> t = delta;
         return t.count();
     }
 

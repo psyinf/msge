@@ -19,19 +19,23 @@ class CoreEntityVisitor : public BaseEntityVisitor
 {
 
 public:
-    Core& core;
-
-    void setSink(EntitySerializationSink sink) {
-        this->sink = sink;
+    void setSink(const EntitySerializationSink& _sink)
+    {
+        this->sink = _sink;
     }
 
-    CoreEntityVisitor(Core& core)
+    explicit CoreEntityVisitor(Core& core)
         : BaseEntityVisitor()
         , core(core)
     {
     }
 
 protected:
+    EntitySerializationSink& getSink() { return sink; }
+    Core&                    getCore() { return core; }
+
+private:
     EntitySerializationSink sink;
+    Core&                   core;
 };
 } // namespace msge
