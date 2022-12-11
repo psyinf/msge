@@ -1,8 +1,6 @@
 #pragma once
 #include <algorithm>
 #include <array>
-#pragma once
-
 #include <strings/FixedString.h>
 
 namespace msge

@@ -1,9 +1,16 @@
 #include "JsonSerializer.h"
 
 #include <Core.h>
+#include <CoreDefinitions.h>
 #include <nlohmann/json.hpp>
 #include <serializers/SpatialJsonSerializer.h>
 #include <serializers/GmtlJsonSerializer.h>
+
+#include <entities/BaseEntity.h>
+#include <entities/CompoundEntity.h>
+#include <entities/StaticEntity.h>
+#include <entities/DynamicEntity.h>
+
 #include <stack>
 #include <vector>
 
@@ -56,6 +63,15 @@ void plugin::JsonSerializer::visit(StaticEntity& entity)
     getSink()(convert(c, buildPath(idStack, entity.id)));
 }
 
+void plugin::JsonSerializer::visit(DynamicEntity& entity)
+{
+    nlohmann::json c;
+    c["id"]      = entity.id;
+    c["spatial"] = entity.spatial;
+
+    getSink()(convert(c, buildPath(idStack, entity.id)));
+}
+
 void plugin::JsonSerializer::visit(BaseEntity& entity)
 {
     nlohmann::json c;
@@ -72,3 +88,5 @@ plugin::JsonSerializer::JsonSerializer(Core& core)
 void plugin::JsonSerializer::finish()
 {
 }
+
+
