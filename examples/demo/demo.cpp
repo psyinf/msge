@@ -13,6 +13,7 @@
 #include <thread>
 #include <plugins/PluginRegistry.h>
 #include <math/DeadReckoning.h>
+#include <visitors/FindEntityVisitor.h>
 
 using namespace msge;
 
@@ -129,6 +130,9 @@ void setupTasks(Core& core)
 int main(int argc, char** argv)
 try
 {
+
+    FindEntityVisitor f("a.b.c");
+    
     /* Setup the core instance. Pass a configuration item and some command line arguments.*/
     CoreConfig c;
     c.default_scene = "root";

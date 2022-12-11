@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-
+#include <gmock/gmock.h>
 #include <strings/StringTools.h>
 
 
@@ -38,4 +38,13 @@ TEST(StringTools, wildCardToRegex)
 {
     EXPECT_EQ(Strings::wildcardToRegex("abc*.*"), "abc.*\\..*");
     EXPECT_EQ(Strings::wildcardToRegex("*.x"), ".*\\.x");
+}
+
+TEST(StringTools_tokenize, tokenize)
+{
+    EXPECT_THAT(Strings::tokenize("a.b.c.d.e", "."), ::testing::ElementsAreArray<std::string_view>({"a", "b", "c", "d", "e"}));
+    EXPECT_THAT(Strings::tokenize("a.b.c.d.e", ""), ::testing::ElementsAreArray<std::string_view>({"a.b.c.d.e"}));
+    EXPECT_THAT(Strings::tokenize("a.b.c.d.e", "x"), ::testing::ElementsAreArray<std::string_view>({"a.b.c.d.e"}));
+    EXPECT_THAT(Strings::tokenize("", "x"), ::testing::ElementsAreArray<std::string_view>({}));
+    EXPECT_THAT(Strings::tokenize("axcvd", "cv"), ::testing::ElementsAreArray<std::string_view>({"ax", "d"}));
 }
