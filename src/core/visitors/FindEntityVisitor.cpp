@@ -9,7 +9,11 @@ msge::FindEntityVisitor::find(CompoundEntity& root, std::string_view name){
     result = {};
     traversalStopped = false;
     initializeNameStack(name);
-    root.accept(*this);
+    if (!stack.empty())
+    {
+        root.accept(*this);
+    }
+   
     return result;
 }
 
@@ -24,11 +28,8 @@ void msge::FindEntityVisitor::visit(BaseEntity& entity)
     {
         return;
     }
-    if (entity.id == stack.front())
+    if (!stack.empty() && entity.id == stack.front())
     {
-        std::cout << "considered "
-                  << entity.id
-                  << std::endl;
         stack.pop_front();
     }
     if (stack.empty())

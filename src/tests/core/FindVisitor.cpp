@@ -58,3 +58,14 @@ TEST(FindVisitor, notFound)
     auto result2 = f.find(*g, "g.a2.b3.c1");
     ASSERT_FALSE(result2.has_value());
 }
+
+TEST(FindVisitor, empty)
+{
+    auto                    g = makeScene1();
+    msge::FindEntityVisitor f;
+    auto                    result = f.find(*g, "");
+    ASSERT_FALSE(result.has_value());
+
+    auto result2 = f.find(*std::make_shared<msge::CompoundEntity>(), "g.a2.b3.c1");
+    ASSERT_FALSE(result2.has_value());
+}
