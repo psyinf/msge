@@ -53,7 +53,8 @@ add_subdirectory(src/plugins)
 add_subdirectory(examples)
 #TESTS
 enable_testing()
-add_subdirectory(src/common_tests)
+add_subdirectory(src/tests/common)
+add_subdirectory(src/tests/core)
 
 if(WIN32)
  add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       

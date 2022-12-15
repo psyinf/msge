@@ -95,6 +95,13 @@ void setupScene(msge::BaseScene& scene)
     g2->addChildren(m);
 }
 
+void testVisitor()
+{
+
+
+}
+
+
 //TODO: FindChild g1.g2 .... Visitor
 
 void setupTasks(Core& core)
@@ -130,9 +137,7 @@ void setupTasks(Core& core)
 int main(int argc, char** argv)
 try
 {
-
-    FindEntityVisitor f("a.b.c");
-    
+    testVisitor();
     /* Setup the core instance. Pass a configuration item and some command line arguments.*/
     CoreConfig c;
     c.default_scene = "root";

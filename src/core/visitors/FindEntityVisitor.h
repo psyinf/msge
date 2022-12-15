@@ -1,26 +1,22 @@
 #pragma once
 #include <SerializationBuffer.h>
+#include <strings/StringTools.h>
 #include <visitors/BaseEntityVisitor.h>
 
+#include <deque>
 #include <functional>
 #include <memory>
-#include <stack>
-#include <strings/StringTools.h>
-
+#include <optional>
 namespace msge
 {
 
 class FindEntityVisitor : public BaseEntityVisitor
 {
 public:
-    explicit FindEntityVisitor(std::string_view name)
-        : BaseEntityVisitor()
-    {
-        initializeNameStack(name);
-    }
+    FindEntityVisitor() = default;
 
-    ~FindEntityVisitor() override = default;
 
+    std::optional<std::reference_wrapper<BaseEntity>> find( CompoundEntity& root, std::string_view name);
 
 protected:
     void traverse(BaseEntity&) override;
@@ -36,8 +32,10 @@ protected:
     void finish() override;
 
 private:
-    void initializeNameStack(std::string_view name);
+    void                                              initializeNameStack(std::string_view name);
+    bool                                              traversalStopped = false;
+    std::optional<std::reference_wrapper<BaseEntity>> result;
 
-    std::stack<std::string> names;
+    std::deque<std::string> stack;
 };
 } // namespace msge
