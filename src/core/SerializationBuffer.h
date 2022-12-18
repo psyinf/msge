@@ -15,6 +15,13 @@ class SerializationBuffer
 public:
     Key key;
     Buffer buffer;
+
+    friend std::ostream& operator<<(std::ostream& out, const SerializationBuffer& c)
+    {
+        
+        //TODO: out << c.buffer;
+        return out;
+    }
 };
 
 

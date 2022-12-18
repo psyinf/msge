@@ -1,12 +1,11 @@
 #pragma once
 #include <SerializationBuffer.h>
-#include <strings/StringTools.h>
-#include <visitors/BaseEntityVisitor.h>
-
 #include <deque>
 #include <functional>
 #include <memory>
 #include <optional>
+#include <strings/StringTools.h>
+#include <visitors/BaseEntityVisitor.h>
 namespace msge
 {
 
@@ -14,9 +13,17 @@ class FindEntityVisitor : public BaseEntityVisitor
 {
 public:
     FindEntityVisitor() = default;
+    FindEntityVisitor(std::string_view name);
 
+    void                                              reset(std::string_view name);
+    std::optional<std::reference_wrapper<BaseEntity>> getResult() const { return result; }
 
-    std::optional<std::reference_wrapper<BaseEntity>> find( CompoundEntity& root, std::string_view name);
+    template <class T>
+    std::optional<std::reference_wrapper<T>> getResult() const
+    {
+        static_assert(std::is_base_of<BaseEntity, T>::value, "type parameter of this class must derive from BaseEntity");
+        return result;
+    }
 
 protected:
     void traverse(BaseEntity&) override;
@@ -33,7 +40,7 @@ protected:
 
 private:
     void                                              initializeNameStack(std::string_view name);
-    bool                                              traversalStopped = false;
+    bool                                              traversalStopped = true;
     std::optional<std::reference_wrapper<BaseEntity>> result;
 
     std::deque<std::string> stack;

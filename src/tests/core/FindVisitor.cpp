@@ -1,12 +1,11 @@
-#include <gtest/gtest.h>
-
-#include <entities/StaticEntity.h>
 #include <entities/CompoundEntity.h>
+#include <entities/StaticEntity.h>
+#include <gtest/gtest.h>
 #include <visitors/FindEntityVisitor.h>
 
 auto makeStaticEntity(std::string_view name)
 {
-    auto e     = std::make_shared<msge::StaticEntity>(name);
+    auto e = std::make_shared<msge::StaticEntity>(name);
     return e;
 }
 
@@ -14,7 +13,7 @@ auto makeGroup(std::string_view name)
 {
     return std::make_shared<msge::CompoundEntity>(name);
 }
-    
+
 auto makeScene1()
 {
     auto g = makeGroup("g");
@@ -39,11 +38,19 @@ TEST(FindVisitor, finds)
 {
     auto                    g = makeScene1();
     msge::FindEntityVisitor f;
-    auto              result = f.find(*g, "g.a2.b3");
+    f.reset("g.a2.b3");
+    g->accept(f);
+
+    auto result = f.getResult();
+
     ASSERT_TRUE(result.has_value());
     ASSERT_EQ(result->get().id, std::string("b3"));
 
-    auto result2 = f.find(*g, "g.a2.b3.c3");
+
+    f.reset("g.a2.b3.c3");
+    g->accept(f);
+    auto result2 = f.getResult();
+
     ASSERT_TRUE(result2.has_value());
     ASSERT_EQ(result2->get().id, std::string("c3"));
 }
@@ -52,20 +59,41 @@ TEST(FindVisitor, notFound)
 {
     auto                    g = makeScene1();
     msge::FindEntityVisitor f;
-    auto                    result = f.find(*g, "g1.a2.b3");
+    f.reset("g1.a2.b3");
+    g->accept(f);
+    auto result = f.getResult();
     ASSERT_FALSE(result.has_value());
-   
-    auto result2 = f.find(*g, "g.a2.b3.c1");
+
+    // reset works
+    f.reset("g.a2.b3.c3");
+    g->accept(f);
+    auto result3 = f.getResult();
+
+    ASSERT_TRUE(result3.has_value());
+    ASSERT_EQ(result3->get().id, std::string("c3"));
+
+    f.reset("g1.a2.b3.c1");
+    g->accept(f);
+    auto result2 = f.getResult();
+
     ASSERT_FALSE(result2.has_value());
+    
 }
 
 TEST(FindVisitor, empty)
 {
     auto                    g = makeScene1();
     msge::FindEntityVisitor f;
-    auto                    result = f.find(*g, "");
+    f.reset("");
+    g->accept(f);
+    auto                    result = f.getResult();
     ASSERT_FALSE(result.has_value());
 
-    auto result2 = f.find(*std::make_shared<msge::CompoundEntity>(), "g.a2.b3.c1");
+    f.reset("g.a2.b3.c1");
+    std::make_shared<msge::CompoundEntity>()->accept(f);
+    
+    auto result2 = f.getResult();
     ASSERT_FALSE(result2.has_value());
 }
+
+//TODO untrimmed name

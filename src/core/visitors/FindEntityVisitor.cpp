@@ -4,17 +4,18 @@
 #include <entities/CompoundEntity.h>
 #include <typeinfo>
 
-std::optional<std::reference_wrapper<msge::BaseEntity>> 
-msge::FindEntityVisitor::find(CompoundEntity& root, std::string_view name){
-    result = {};
+msge::FindEntityVisitor::FindEntityVisitor(std::string_view name)
+{
+    reset(name);
+}
+
+void msge::FindEntityVisitor::reset(std::string_view name)
+{
+    result           = {};
+    stack            = {};
     traversalStopped = false;
     initializeNameStack(name);
-    if (!stack.empty())
-    {
-        root.accept(*this);
-    }
-   
-    return result;
+    traversalStopped = stack.empty();
 }
 
 void msge::FindEntityVisitor::traverse(BaseEntity& e)
@@ -65,6 +66,9 @@ void msge::FindEntityVisitor::finish()
 
 void msge::FindEntityVisitor::initializeNameStack(std::string_view name)
 {
+    /**
+     * split the name by the separation character and put the result on a stack for later inspection
+     */
     auto view = name
               | std::views::split('.')
               | std::views::transform([](const auto& rng) {
