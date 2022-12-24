@@ -65,15 +65,15 @@ void Core::setup(const CoreConfig& config, const CommandLineArgs& args)
 }
 
 Core::Core(const CoreConfig& config, const CommandLineArgs& args)
-    : pluginRegistry(std::make_unique<plugins::PluginRegistry>())
-    , pluginManager(std::make_unique<CorePluginManager>())
+    : pluginManager(std::make_unique<CorePluginManager>())
+    , pluginRegistry(std::make_unique<plugins::PluginRegistry>())
 {
     setup(config, args);
 }
 
-void Core::addTask(std::string_view name, std::function<void(const FrameStamp&)> f)
+void Core::addTask(std::string_view name, std::function<void(const FrameStamp&)>&& f)
 {
-    taskQueue->addTask(std::make_unique<FunctionTask>(f, TaskProperties{std::string(name)}));
+    taskQueue->addTask(std::make_unique<FunctionTask>(std::move(f), TaskProperties{std::string(name)}));
 }
 
 std::future<void> Core::start()

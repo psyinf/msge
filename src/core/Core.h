@@ -73,9 +73,9 @@ public:
     auto& getTaskQueuePrototypes() { return taskQueuePrototypes; }
    
 
-    //#TODO: move the task related funtions into an interface
+    //#TODO: move the task related functions into an interface
     // for now, adds a scheduled function
-    void addTask(std::string_view name, std::function<void(const FrameStamp&)> f);
+    void addTask(std::string_view name, std::function<void(const FrameStamp&)>&& f);
 
     std::future<void> start();
 

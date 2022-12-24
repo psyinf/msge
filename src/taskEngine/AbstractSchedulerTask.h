@@ -56,12 +56,6 @@ public:
     {
     }
 
-    FunctionTask(TaskFunction&& func, std::string_view name)
-        : AbstractSchedulerTask(TaskProperties{TaskId{name}})
-        , func(std::move(func))
-    {
-    }
-
     FunctionTask(FunctionTask&& rhs) noexcept 
         : AbstractSchedulerTask(std::move(rhs.getProperties()))
     {

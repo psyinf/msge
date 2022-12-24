@@ -61,8 +61,6 @@ void BasicScheduler::setTaskQueue(std::shared_ptr<AbstractTaskQueue> taskQueue)
 void BasicScheduler::onFrameEnd(const SchedulerRunInfo& sri)
 {
     ++frameNumber;
-    
-
     AbstractScheduler::onFrameEnd(sri);
 }
 

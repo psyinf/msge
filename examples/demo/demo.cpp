@@ -8,14 +8,12 @@
 #include <entities/DynamicEntity.h>
 #include <entities/StaticEntity.h>
 #include <exception>
-#include <iostream>
 #include <fstream>
-#include <thread>
-
+#include <iostream>
 #include <math/DeadReckoning.h>
 #include <math/Spatial.h>
 #include <plugins/PluginRegistry.h>
-
+#include <thread>
 #include <visitors/FindEntityVisitor.h>
 
 using namespace msge;
@@ -23,13 +21,16 @@ using namespace msge;
 /*Very simple dynamic entity*/
 class Mover : public DynamicEntity
 {
+    Mover(Mover&) = delete;
+
+   
 public:
     using DynamicEntity::DynamicEntity;
     // move along some simple path
     void frame(const FrameStamp& fs)
     {
-
-        gmtl::AABoxd box(gmtl::Vec3d{-100, -100, -100}, {100, 100, 100});
+        const auto   dim = 10.0f;
+        gmtl::AABoxd box(gmtl::Vec3d{-dim, -dim, -dim}, {dim, dim, dim});
         auto&        velocity = spatial.velocity;
         auto&        trans    = spatial.position;
         trans += velocity * common::math::DeadReckoning::toSeconds(fs.frameTime);
@@ -53,8 +54,34 @@ public:
     }
 };
 
+/**
+ * Simple stream sink
+ */
 
-auto makeMover(std::string_view name, common::math::Dynamic&& s)
+class SerializationBufferStreamAdaptor
+{
+public:
+    SerializationBufferStreamAdaptor(std::ostream& ostream)
+        : stream(ostream.rdbuf())
+    {
+    }
+
+
+    void operator()(const EntitySerializationBuffer& b)
+    {
+        stream << b;
+    }
+
+
+private:
+    std::ostream stream;
+};
+
+std::ofstream outstream( "outstream.txt");
+SerializationBufferStreamAdaptor sa(outstream);
+
+
+auto                             makeMover(std::string_view name, common::math::Dynamic&& s)
 {
     auto e     = std::make_shared<Mover>(name);
     e->spatial = std::move(s);
@@ -74,35 +101,10 @@ auto makeGroup(std::string_view name)
     return std::make_shared<CompoundEntity>(name);
 }
 
-class SerializationBufferStreamAdaptor
-{
-public:
-    SerializationBufferStreamAdaptor(std::ofstream&& stream)
-        : stream(std::move(stream))
-    {
-    }
-
-    void operator()(const EntitySerializationBuffer& b)
-    {
-        stream << b;
-    }
-
-
-private:
-    std::ofstream stream;
-};
-
-void
-getMsg(const msge::EntitySerializationBuffer& buf)
-{
-    std::cout << buf.key << "\n";
-    std::cout << std::string(buf.buffer.begin(), buf.buffer.end()) << "\n";
-}
-
 
 void setupScene(msge::BaseScene& scene)
 {
-    
+
     // static entity
     scene.addEntity(makeStaticEntity("se1", common::math::Spatial{gmtl::Point3d{0, 0, 0}}));
     scene.addEntity(makeStaticEntity("se2", common::math::Spatial{gmtl::Point3d{1, 0, 0}}));
@@ -117,11 +119,14 @@ void setupScene(msge::BaseScene& scene)
 }
 
 
-
 void setupTasks(Core& core)
 {
-    std::optional<std::reference_wrapper<Mover>> m = core.getScene("root").findEntity<Mover>("g1.g2.m1");
-     
+    auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
+    jsonSerializer->setSink(std::bind_front(&SerializationBufferStreamAdaptor::operator(), &sa));
+
+
+    std::reference_wrapper<Mover> m = core.getScene("root").findEntity<Mover>("g1.g2.m1").value();
+
     // some informative task
     core.addTask("frameStart", [](const auto& frame_stamp) {
         if (frame_stamp.frameNumber % 1000 == 0)
@@ -130,11 +135,19 @@ void setupTasks(Core& core)
         }
     });
 
+    core.addTask("Serialize", [&core, jsonSerializer]([[maybe_unused]] const auto& frame_stamp) {
+        if (0 == frame_stamp.frameNumber % 100)
+        {
+            core.getScene("root").runVisitor(*jsonSerializer, nullptr);
+        }
+       
+    });
+
     core.addTask("playing the waiting game", []([[maybe_unused]] const auto& frame_stamp) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     });
-   
-    core.addTask("move", std::bind_front(&Mover::frame, m->get()));
+
+    core.addTask("move", [m](const auto& fs) { m.get().frame(fs); });
 
     // some informative end-task
     core.addTask("frameEnd", [](auto& frame_stamp) {

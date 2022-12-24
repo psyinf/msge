@@ -31,9 +31,8 @@ public:
     template <typename T>
     std::optional<std::reference_wrapper<T>> findEntity(std::string_view path)
     {
-        std::optional<std::reference_wrapper<T>> r = {};
         auto found = findEntity(path);
-        return r                                       = std::reference_wrapper<T>(dynamic_cast<T&>(found->get()));
+        return  std::reference_wrapper<T>(dynamic_cast<T&>(found->get()));
     };
     
 

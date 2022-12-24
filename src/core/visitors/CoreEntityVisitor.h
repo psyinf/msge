@@ -8,7 +8,7 @@
 namespace msge
 {
 
-using EntitySerializationSink = std::function<void(msge::EntitySerializationBuffer&&)>;
+using EntitySerializationSink = std::function<void(const msge::EntitySerializationBuffer&)>;
 
 class Core;
 /**
@@ -19,11 +19,12 @@ class CoreEntityVisitor : public BaseEntityVisitor
 {
 
 public:
-    void setSink(const EntitySerializationSink& _sink)
+    
+    void setSink(EntitySerializationSink&& _sink)
     {
-        this->sink = _sink;
+        this->sink = std::move(_sink);
     }
-
+    
     explicit CoreEntityVisitor(Core& core)
         : BaseEntityVisitor()
         , core(core)

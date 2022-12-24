@@ -2,7 +2,9 @@
 #include "strings/FixedString.h"
 
 #include <array>
+#include <iostream>
 #include <cstddef>
+#include <ranges>
 #include <vector>
 namespace msge
 {
@@ -18,8 +20,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const SerializationBuffer& c)
     {
-        
-        //TODO: out << c.buffer;
+        std::ranges::copy(c.buffer, std::ostream_iterator<std::uint8_t>(out));
         return out;
     }
 };
