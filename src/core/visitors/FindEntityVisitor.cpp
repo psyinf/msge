@@ -4,6 +4,7 @@
 #include <entities/CompoundEntity.h>
 #include <algorithm>
 #include <ranges>
+#include <string_view>
 
 msge::FindEntityVisitor::FindEntityVisitor(std::string_view name)
 {
