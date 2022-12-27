@@ -2,7 +2,8 @@
 
 #include <entities/BaseEntity.h>
 #include <entities/CompoundEntity.h>
-#include <typeinfo>
+#include <algorithm>
+#include <ranges>
 
 msge::FindEntityVisitor::FindEntityVisitor(std::string_view name)
 {
@@ -73,7 +74,7 @@ void msge::FindEntityVisitor::initializeNameStack(std::string_view name)
               | std::views::split('.')
               | std::views::transform([](const auto& rng) {
                     auto c = rng | std::views::common;
-                    return std::string_view(c);
+                    return std::string_view(c.begin(), c.end());
                 });
     std::ranges::for_each(view, [this](const auto& s) { stack.emplace_back(s); });
 }
