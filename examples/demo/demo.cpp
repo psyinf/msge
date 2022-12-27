@@ -77,6 +77,9 @@ private:
     std::ostream stream;
 };
 
+//TODO: KafkaBufferStreamAdaptor 
+
+
 std::ofstream outstream( "outstream.txt");
 SerializationBufferStreamAdaptor sa(outstream);
 
@@ -178,7 +181,6 @@ try
 
     // run the core
     auto future = core.start();
-    // TODO: put serializer into a task and some task to modify an entity (group with children) every frame
     future.get();
 }
 catch (const std::exception& e)
