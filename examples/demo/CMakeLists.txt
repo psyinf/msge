@@ -9,11 +9,12 @@ add_executable(${APP_NAME}
 	${HEADER_FILES}
 	${CPP_FILES}
 )
-			   
+find_package(ModernCppKafka CONFIG REQUIRED)			   
 
 target_link_libraries (${APP_NAME} 
 	PRIVATE				
 		${PROJECT_NAMESPACE}::core
+		ModernCppKafka::ModernCppKafka
 )
 
 target_include_directories(${APP_NAME}

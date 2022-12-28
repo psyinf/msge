@@ -1,3 +1,6 @@
+#define WIN32_LEAN_AND_MEAN
+#include <WinSock2.h>
+#undef WIN32_LEAN_AND_MEAN
 #include "Core.h"
 #include "CoreConfig.h"
 
@@ -15,6 +18,7 @@
 #include <plugins/PluginRegistry.h>
 #include <thread>
 #include <visitors/FindEntityVisitor.h>
+#include "KafkaStreamAdapter.h"
 
 using namespace msge;
 
@@ -23,7 +27,7 @@ class Mover : public DynamicEntity
 {
     Mover(Mover&) = delete;
 
-   
+
 public:
     using DynamicEntity::DynamicEntity;
     // move along some simple path
@@ -77,14 +81,14 @@ private:
     std::ostream stream;
 };
 
-//TODO: KafkaBufferStreamAdaptor 
 
 
-std::ofstream outstream( "outstream.txt");
+
+std::ofstream                    outstream("outstream.txt");
 SerializationBufferStreamAdaptor sa(outstream);
+KafkaStreamAdaptor               ka;
 
-
-auto                             makeMover(std::string_view name, common::math::Dynamic&& s)
+auto makeMover(std::string_view name, common::math::Dynamic&& s)
 {
     auto e     = std::make_shared<Mover>(name);
     e->spatial = std::move(s);
@@ -125,7 +129,8 @@ void setupScene(msge::BaseScene& scene)
 void setupTasks(Core& core)
 {
     auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
-    jsonSerializer->setSink(std::bind_front(&SerializationBufferStreamAdaptor::operator(), &sa));
+    //jsonSerializer->setSink(std::bind_front(&SerializationBufferStreamAdaptor::operator(), &sa));
+    jsonSerializer->setSink(std::bind_front(&KafkaStreamAdaptor::operator(), &ka));
 
 
     std::reference_wrapper<Mover> m = core.getScene("root").findEntity<Mover>("g1.g2.m1").value();
@@ -143,7 +148,6 @@ void setupTasks(Core& core)
         {
             core.getScene("root").runVisitor(*jsonSerializer, nullptr);
         }
-       
     });
 
     core.addTask("playing the waiting game", []([[maybe_unused]] const auto& frame_stamp) {
