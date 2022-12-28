@@ -1,9 +1,9 @@
 #pragma once
-#include <visitors/BaseEntityVisitor.h>
 #include <entities/CompoundEntity.h>
 #include <entities/StaticEntity.h>
-
+#include <entities/DynamicEntity.h>
 #include <fmt/core.h>
+#include <visitors/BaseEntityVisitor.h>
 namespace msge
 {
 
@@ -27,14 +27,20 @@ public:
         print(fmt::format("Compound: {}", entity.id));
         traverse(entity);
     }
+
+
+    void visit(DynamicEntity& entity) override
+    {
+        print(fmt::format("Dynamic: {}", entity.id));
+    }
+
     void finish() override{};
 
-   
 
 protected:
     virtual std::string indent() const
     {
-        //#TODO: replace with a clever approach
+        // #TODO: replace with a clever approach
         std::string indent;
         for (auto i = 0u; i < level; ++i)
         {

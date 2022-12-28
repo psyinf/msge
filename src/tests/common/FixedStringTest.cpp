@@ -13,7 +13,8 @@ TEST(FixedString_construction, all)
         
      
         });
-    auto sv = std::string_view(FixedString<1>());
+    FixedString<1> fs;
+    auto sv = std::string_view(fs);
    //TODO: test trailing \0 behavior;
 }
 TEST(FixedString_operators, equalsFixed)

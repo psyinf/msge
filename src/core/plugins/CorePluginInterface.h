@@ -3,10 +3,14 @@
 #include <plugins/PluginBase.h>
 
 
+namespace msge
+{
+    class Core;
+}
 
 namespace msge::plugins
 {
-class PluginRegistry;
+
 
 class CorePluginInfo : public common::PluginInfo
 {
@@ -17,12 +21,9 @@ class CorePluginInterface : public common::PluginBase
 public:
     explicit CorePluginInterface(const std::string& plugin_file_path);
 
-    bool registerPlugin(PluginRegistry& core) const;
+    bool registerPlugin(Core& core) const;
 
 private:
-    std::function<void(PluginRegistry&)> registerPluginFn;
-
-
-    
+    std::function<void(Core&)> registerPluginFn;
 };
-} // namespace msge::plugin
+} // namespace msge::plugins

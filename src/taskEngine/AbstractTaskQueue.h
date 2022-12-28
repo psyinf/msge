@@ -27,7 +27,7 @@ public:
     /**
      * Add a new task. It will be removed from the current view only after @code restartIndex
      */
-    virtual void removeTask(TaskId task) = 0;
+    virtual void removeTask(const TaskId& task) = 0;
     /**
      * Get the next task in line.
      */

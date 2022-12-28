@@ -13,15 +13,15 @@ using namespace msge::plugins;
 CorePluginInterface::CorePluginInterface(const std::string& plugin_file_path)
     : common::PluginBase(plugin_file_path)
 {
-    registerPluginFn = bindFunction<void, PluginRegistry&>(getHandle(), "registerPlugin");
+    registerPluginFn = bindFunction<void, Core&>(getHandle(), "registerPlugin");
 }
 
 
-bool CorePluginInterface::registerPlugin(PluginRegistry& pluginRegistry) const
+bool CorePluginInterface::registerPlugin(Core& core) const
 {
     if (registerPluginFn)
     {
-        registerPluginFn(pluginRegistry);
+        registerPluginFn(core);
         return true;
     }
     return false;

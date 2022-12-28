@@ -2,7 +2,7 @@
 #include <visitors/BaseEntityVisitor.h>
 #include <CoreDefinitions.h>
 #include <FrameStamp.h>
-#include <Spatial.h>
+#include <math/Spatial.h>
 #include <array>
 
 

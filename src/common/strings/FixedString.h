@@ -20,14 +20,14 @@ public:
     {
         content[0] = '\0';
     }
-    
-    FixedString(const FixedString& rhs) {
-        std::ranges::copy(rhs.content, content.begin());
-        content_view = normalize( std::string_view(content));
 
+    FixedString(const FixedString& rhs)
+    {
+        std::ranges::copy(rhs.content, content.begin());
+        content_view = normalize(std::string_view(content));
     }
-    
-       explicit(false) FixedString(std::string_view s)
+
+    explicit(false) FixedString(std::string_view s)
     {
         if (s.length() > LENGTH)
         {
@@ -38,7 +38,7 @@ public:
         content[std::min(content.size() - 1, s.length())] = '\0';
         std::ranges::copy_n(s.begin(), length_to_consider, content.begin());
 
-       
+
         content_view = std::string_view(content.data(), length_to_consider);
     }
 
@@ -69,7 +69,7 @@ public:
 
     size_t size() const { return content_view.size(); }
 
-    const auto data() const
+    const auto* data() const
     {
         return content.data();
     };
@@ -82,7 +82,7 @@ private:
         return rhs_norm;
     }
 
-    
+
 private:
     std::array<char, LENGTH> content;
     std::string_view         content_view;
@@ -90,7 +90,7 @@ private:
 
 /*
  * We need to specialize this to avoid char* comparison to be induced
-*/
+ */
 template <size_t L>
 bool operator==(const FixedString<L>& lhs, const FixedString<L>& rhs)
 {
@@ -98,7 +98,7 @@ bool operator==(const FixedString<L>& lhs, const FixedString<L>& rhs)
 }
 
 template <size_t L>
-auto operator<=>(const FixedString<L>& lhs, const FixedString<L>& rhs) 
+auto operator<=>(const FixedString<L>& lhs, const FixedString<L>& rhs)
 {
     return lhs <=> std::string_view(rhs);
 }

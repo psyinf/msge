@@ -6,7 +6,7 @@ namespace msge
 /**
  * Entity that is supposed not to move (e.g. a house or a tree)
  */
-class StaticEntity : public BaseEntity
+class DynamicEntity : public BaseEntity
 {
 public:
     using BaseEntity::BaseEntity;
@@ -15,6 +15,6 @@ public:
         bev.visit(*this);
     }
 
-    common::math::Spatial spatial;
+    common::math::Dynamic spatial;
 };
 } // namespace msge

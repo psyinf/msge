@@ -8,10 +8,7 @@ class SimpleScene : public BaseScene
 {
 
 public:
-    explicit SimpleScene(const SceneId& sceneId)
-        : BaseScene(sceneId)
-    {
-    }
+    using BaseScene::BaseScene;
 
 
     void addEntity(std::shared_ptr<BaseEntity>) override;
@@ -19,7 +16,11 @@ public:
     bool hasEntity(const EntityId& entityId) override;
 
 
-    void runVisitor(BaseEntityVisitor& visitor) override;
+    void runVisitor(
+        BaseEntityVisitor& visitor, const std::function<bool(BaseEntityVisitor&)>& callback = []([[maybe_unused]] const auto& v) { return true; }) override;
+
+
+    std::optional<std::reference_wrapper<BaseEntity>> findEntity(std::string_view) override;
 
 private:
     std::vector<std::shared_ptr<BaseEntity>> entities;

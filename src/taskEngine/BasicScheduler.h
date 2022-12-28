@@ -1,12 +1,15 @@
-#pragma once 
+#pragma once
 #include "AbstractScheduler.h"
+
 #include <atomic>
 
-namespace msge{
+namespace msge
+{
 
 class BasicScheduler : public AbstractScheduler
 {
 public:
+  
     ~BasicScheduler() override = default;
 
     void run() override;
@@ -19,12 +22,11 @@ public:
     void stop() override;
 
     void start() override;
-
 private:
-    std::shared_ptr<AbstractTaskQueue>  taskQueue;
-    std::atomic_bool                    isRunning{false};
-    std::uint32_t                       frameNumber{0};
+    std::shared_ptr<AbstractTaskQueue> taskQueue;
+    std::atomic_bool                   isRunning{false};
+    std::uint32_t                      frameNumber{0};
 };
 
-	
-}
+
+} // namespace msge

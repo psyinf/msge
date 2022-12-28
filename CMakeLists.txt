@@ -4,6 +4,7 @@ project(${PROJECT} VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_DEBUG_POSTFIX _d)
 set(CMAKE_RELWITHDEBINFO_POSTFIX _rd)
@@ -53,7 +54,8 @@ add_subdirectory(src/plugins)
 add_subdirectory(examples)
 #TESTS
 enable_testing()
-add_subdirectory(src/common_tests)
+add_subdirectory(src/tests/common)
+add_subdirectory(src/tests/core)
 
 if(WIN32)
  add_custom_target( conan-install ALL COMMAND conan install ${CMAKE_SOURCE_DIR}/conanfile.py -if ${CMAKE_INSTALL_PREFIX} -s build_type=$<CONFIG> DEPENDS install)       

@@ -1,9 +1,8 @@
 #pragma once
 #include <entities/BaseEntity.h>
-#include <visitors/BaseEntityVisitor.h>
-#include <Spatial.h>
-
+#include <math/Spatial.h>
 #include <ranges>
+#include <visitors/BaseEntityVisitor.h>
 namespace msge
 {
 class BaseEntity;
@@ -25,12 +24,18 @@ public:
     {
         std::ranges::for_each(children, [&bev](auto& c) { c->accept(bev); });
     }
-
-    void addChildren(const std::shared_ptr<BaseEntity>& c)
+    /*
+    FIXME: emplace_back should accept ellipse
+    */
+    void addChildren(std::convertible_to<std::shared_ptr<BaseEntity>> auto&&... s)
     {
-        children.emplace_back(c);
+        for (const auto& v : std::initializer_list<std::shared_ptr<BaseEntity>>{s...})
+        {
+            children.emplace_back(v);
+        }
     }
-    Spatial spatial;
+
+    common::math::Spatial spatial;
 
 
 private:

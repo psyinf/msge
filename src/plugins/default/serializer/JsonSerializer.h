@@ -1,27 +1,30 @@
-#include <entities/BaseEntity.h>
-#include <entities/CompoundEntity.h>
-#include <entities/StaticEntity.h>
-#include <visitors/CoreEntityVisitor.h>
-
+#include <deque>
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <stack>
-
+#include <visitors/CoreEntityVisitor.h>
+#include <CoreDefinitions.h>
 
 namespace msge
 {
 class Core;
+class BaseEntity;
+class StaticEntity;
+class DynamicEntity;
+
 }
 
 namespace msge::plugin
 {
 
+/**
+ * Serializer that converts a list of entities individually.
+ */
 
 class JsonSerializer : public CoreEntityVisitor
 {
-
-
 public:
+    using IdStack = std::deque<msge::EntityId>;
+
     JsonSerializer(Core& core);
 
 
@@ -31,12 +34,14 @@ public:
 
     void visit(CompoundEntity& entity) override;
 
+    void visit(DynamicEntity& entity) override;
+
     void finish() override;
 
 protected:
     void traverse(BaseEntity& e) override;
 
 private:
-    std::stack<EntityId> idStack;
+    IdStack idStack;
 };
 } // namespace msge::plugin

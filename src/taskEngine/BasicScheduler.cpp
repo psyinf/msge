@@ -26,7 +26,7 @@ void BasicScheduler::run()
     while (isRunning)
     {
         auto       frame_start = Clock::now();
-        FrameStamp f = {frameNumber, std::chrono::milliseconds(16)};
+        auto f = FrameStamp{frameNumber, std::chrono::milliseconds(16)};
         while (taskQueue->hasNext())
         {
             auto& task       = taskQueue->getNext();
@@ -61,8 +61,6 @@ void BasicScheduler::setTaskQueue(std::shared_ptr<AbstractTaskQueue> taskQueue)
 void BasicScheduler::onFrameEnd(const SchedulerRunInfo& sri)
 {
     ++frameNumber;
-    
-
     AbstractScheduler::onFrameEnd(sri);
 }
 

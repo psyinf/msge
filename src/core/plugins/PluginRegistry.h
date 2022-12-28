@@ -23,6 +23,7 @@ public:
      * Visitors associated with the core reference
      */
     void registerPlugin(std::string_view prototypeName, CoreVisitorFactory::CtorFunc&& constructor);
+   
 
     auto getInstancePrototype(std::string_view name) const;
 
@@ -31,6 +32,7 @@ public:
 private:
     BaseVisitorFactory visitorFactory;
     CoreVisitorFactory coreVisitorFactory;
+
 };
 
 
