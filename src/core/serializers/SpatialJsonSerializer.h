@@ -1,6 +1,8 @@
 #pragma once
 #include <serializers/GmtlJsonSerializer.h>
 #include <math/Spatial.h>
+#include <nlohmann/json.hpp>
+
 namespace common::math
 {
 
