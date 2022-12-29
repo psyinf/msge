@@ -22,7 +22,7 @@ public:
     void operator()(const msge::EntitySerializationBuffer& b)
     {
         auto record = ProducerRecord(topic,
-                                     NullKey,
+                                     Key(b.key.data(), b.key.size()),
                                      Value(b.buffer.data(), b.buffer.size()));
 
         // Send the message.
