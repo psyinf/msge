@@ -16,8 +16,9 @@ namespace msge
 class BaseEntity
 {
 public:
-    explicit BaseEntity(const EntityId& id)
+    explicit BaseEntity(const EntityId& id, const TypeId& type)
         : id{id}
+        , type{type}
     {
     }
 
@@ -35,5 +36,6 @@ public:
     BaseEntity() = default;
 
     const EntityId id;
+    const TypeId   type;
 };
 } // namespace msge

@@ -1,7 +1,7 @@
 
 
-#include <kafka/KafkaProducer.h>
 #include <SerializationBuffer.h>
+#include <kafka/KafkaProducer.h>
 
 
 using namespace kafka;
@@ -17,8 +17,8 @@ class KafkaStreamAdaptor
 {
 public:
     KafkaStreamAdaptor() = default;
-    
 
+    bool debug = false;
     void operator()(const msge::EntitySerializationBuffer& b)
     {
         auto record = ProducerRecord(topic,
@@ -29,13 +29,15 @@ public:
         try
         {
             const RecordMetadata metadata = producer.syncSend(record);
-            std::cout << "% Message delivered: " << metadata.toString() << std::endl;
+            if (debug)
+            {
+                std::cout << "% Message delivered: " << metadata.toString() << std::endl;
+            }
         }
         catch (const KafkaException& e)
         {
             std::cerr << "% Message delivery failed: " << e.error().message() << std::endl;
         }
-
     }
 
 

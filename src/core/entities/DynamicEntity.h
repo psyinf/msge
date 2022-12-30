@@ -4,7 +4,7 @@
 namespace msge
 {
 /**
- * Entity that is supposed not to move (e.g. a house or a tree)
+ * Entity that can move
  */
 class DynamicEntity : public BaseEntity
 {

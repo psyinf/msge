@@ -21,18 +21,18 @@ try
 
     auto bs = std::make_unique<SimpleScene>("scene1");
 
-    auto ses = {StaticEntity{"se1"}, StaticEntity{"se2"}, StaticEntity{"se3"}};
+    auto ses = {StaticEntity{"se1", "t1"}, StaticEntity{"se2", "t1"}, StaticEntity{"se3", "t1"}};
     for (auto& es : ses)
     {
         bs->addEntity(std::make_shared<StaticEntity>(es));
     }
     
 
-    CompoundEntity group1 = CompoundEntity("g1");
-    group1.addChildren(std::make_shared<BaseEntity>("sub1"));
-    group1.addChildren(std::make_shared<BaseEntity>("sub2"));
+    CompoundEntity group1 = CompoundEntity("g1", "gt1");
+    group1.addChildren(std::make_shared<BaseEntity>("sub1", "st1"));
+    group1.addChildren(std::make_shared<BaseEntity>("sub2", "st1"));
     bs->addEntity(std::make_shared<CompoundEntity>(std::move(group1)));
-    bs->addEntity(std::make_shared<BaseEntity>("be1"));
+    bs->addEntity(std::make_shared<BaseEntity>("be1", "t1"));
     msge::LogEntityVisitor lev;
 
     

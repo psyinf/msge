@@ -5,13 +5,13 @@
 
 auto makeStaticEntity(std::string_view name)
 {
-    auto e = std::make_shared<msge::StaticEntity>(name);
+    auto e = std::make_shared<msge::StaticEntity>(name, "s1");
     return e;
 }
 
 auto makeGroup(std::string_view name)
 {
-    return std::make_shared<msge::CompoundEntity>(name);
+    return std::make_shared<msge::CompoundEntity>(name, "t1");
 }
 
 auto makeScene1()
