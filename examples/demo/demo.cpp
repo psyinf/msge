@@ -1,6 +1,8 @@
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <WinSock2.h>
 #undef WIN32_LEAN_AND_MEAN
+#endif
 #include "Core.h"
 #include "CoreConfig.h"
 #include "KafkaStreamAdapter.h"
@@ -64,7 +66,7 @@ public:
     void frame(const FrameStamp& fs) override
     {
         spatial.position += spatial.velocity * common::math::DeadReckoning::toSeconds(fs.frameTime);
-        reflect(spatial);
+        reflectAtBounds(spatial);
     }
 };
 
@@ -77,7 +79,7 @@ public:
     void frame(const FrameStamp& fs) override
     {
         spatial.position += spatial.velocity * common::math::DeadReckoning::toSeconds(fs.frameTime);
-        reflect(spatial);
+        reflectAtBounds(spatial);
     }
 };
 /**
