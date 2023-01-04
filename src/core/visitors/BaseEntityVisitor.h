@@ -6,7 +6,6 @@ class BaseEntity;
 class StaticEntity;
 class CompoundEntity;
 class DynamicEntity;
-
 class BaseEntityVisitor
 {
 public:

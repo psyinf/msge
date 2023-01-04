@@ -10,7 +10,7 @@ class Core;
 class BaseEntity;
 class StaticEntity;
 class DynamicEntity;
-
+class CompoundEntity;
 }
 
 namespace msge::plugin

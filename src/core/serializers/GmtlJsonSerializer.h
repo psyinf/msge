@@ -8,7 +8,7 @@ namespace gmtl
 template<class DATA_TYPE, unsigned S>
 inline void to_json(nlohmann::json& j, const VecBase<DATA_TYPE, S> & p)
 {
-    j = nlohmann::json::array({p.mData});
+    j = nlohmann::json(p.mData);
 }
 template <class DATA_TYPE, unsigned S>
 inline void from_json(const nlohmann::json& j, VecBase<DATA_TYPE, S>& p)
@@ -30,6 +30,7 @@ inline void from_json(const nlohmann::json& j, Quatd& q)
 template <typename DATA_TYPE, typename ROTATION_ORDER>
 inline void to_json(nlohmann::json& j, const EulerAngle < DATA_TYPE, ROTATION_ORDER> &e)
 {
+    //TODO: reinterpret as array
     j = nlohmann::json::array({*e.getData()});
 }
 template <typename DATA_TYPE, typename ROTATION_ORDER>

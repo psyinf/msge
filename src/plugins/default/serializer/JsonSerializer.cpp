@@ -17,6 +17,11 @@
 
 using namespace msge;
 using namespace nlohmann;
+void serializeBase(nlohmann::json& c, const BaseEntity& entity)
+{
+    c["id"]   = entity.id;
+    c["type"] = entity.type;
+}
 
 EntitySerializationBuffer convert(const nlohmann::json& json, const std::string& id)
 {
@@ -47,7 +52,8 @@ void plugin::JsonSerializer::traverse(BaseEntity& e)
 void plugin::JsonSerializer::visit(CompoundEntity& entity)
 {
     nlohmann::json c;
-    c["id"]      = entity.id;
+    serializeBase(c, entity);
+    
     c["spatial"] = entity.spatial;
 
     getSink()(convert(c, buildPath(idStack, entity.id)));
@@ -57,7 +63,7 @@ void plugin::JsonSerializer::visit(CompoundEntity& entity)
 void plugin::JsonSerializer::visit(StaticEntity& entity)
 {
     nlohmann::json c;
-    c["id"]      = entity.id;
+    serializeBase(c, entity);
     c["spatial"] = entity.spatial;
 
     getSink()(convert(c, buildPath(idStack, entity.id)));
@@ -66,7 +72,7 @@ void plugin::JsonSerializer::visit(StaticEntity& entity)
 void plugin::JsonSerializer::visit(DynamicEntity& entity)
 {
     nlohmann::json c;
-    c["id"]      = entity.id;
+    serializeBase(c, entity);
     c["spatial"] = entity.spatial;
 
     getSink()(convert(c, buildPath(idStack, entity.id)));
@@ -75,7 +81,7 @@ void plugin::JsonSerializer::visit(DynamicEntity& entity)
 void plugin::JsonSerializer::visit(BaseEntity& entity)
 {
     nlohmann::json c;
-    c["id"] = entity.id;
+    serializeBase(c, entity);
 
     getSink()(convert(c, buildPath(idStack, entity.id)));
 }

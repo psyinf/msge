@@ -12,6 +12,7 @@ class MSGE(ConanFile):
                 ,("gtest/1.12.1")    
                 ,("fmt/9.1.0")
                 ,("nlohmann_json/3.11.2")
+                ,("modern-cpp-kafka/2022.12.07")
                 ]
     generators = "cmake_find_package_multi"
     

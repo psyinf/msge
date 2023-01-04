@@ -5,10 +5,10 @@
 #include <visitors/BaseEntityVisitor.h>
 namespace msge
 {
-class BaseEntity;
+
 
 /**
- * Compound of entities. The spatial is the base for all children. I.e. their spatial is considered relative to the base
+ * Compound of entities. The spatial is the base for all children. I.e. their spatial is considered relative to the base. Spatial is a Dynamic
  */
 class CompoundEntity : public BaseEntity
 {
@@ -35,7 +35,7 @@ public:
         }
     }
 
-    common::math::Spatial spatial;
+   common::math::Dynamic spatial;
 
 
 private:
