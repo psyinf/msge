@@ -19,7 +19,7 @@ void BasicScheduler::run()
 
 
     
-    const auto                     launch_mode = std::launch::async | std::launch::deferred;
+    const auto                     launch_mode = std::launch::async;
     std::vector<std::future<void>> scheduled_tasks;
     SchedulerRunInfo               lastRunInfo;
 

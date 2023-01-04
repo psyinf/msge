@@ -29,7 +29,7 @@ public:
 protected:
     virtual void frame(const FrameStamp& fs) = 0;
 
-    void reflect(common::math::Dynamic& spatial)
+    void reflectAtBounds(common::math::Dynamic& spatial)
     {
         const auto   dim = 10.0f;
         gmtl::AABoxd box(gmtl::Vec3d{-dim, -dim, -dim}, {dim, dim, dim});
@@ -192,7 +192,7 @@ void setupTasks(Core& core)
     });
 
     core.addTask("playing the waiting game", []([[maybe_unused]] const auto& frame_stamp) {
-       // std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     });
 
     core.addTask("move", [m](const auto& fs) { m.get().frame(fs); });
