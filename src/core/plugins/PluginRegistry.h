@@ -1,6 +1,7 @@
 #pragma once
 #include <visitors/BaseEntityVisitor.h>
 #include <visitors/CoreEntityVisitor.h>
+#include <interfaces/StreamSink.h>
 #include <FactoryRegistry.h>
 
 
@@ -8,6 +9,7 @@ namespace msge::plugins
 {
 using BaseVisitorFactory = common::GenericFactory<BaseEntityVisitor>;
 using CoreVisitorFactory = common::GenericFactory<CoreEntityVisitor, msge::Core&>;
+using StreamSinkFactory = common::GenericFactory<StreamSink, msge::Core&>;
 
 /**
  * Registry to hold constructors for class prototypes.
@@ -23,7 +25,11 @@ public:
      * Visitors associated with the core reference
      */
     void registerPlugin(std::string_view prototypeName, CoreVisitorFactory::CtorFunc&& constructor);
-   
+    /**
+     * Stream sinks
+     */
+    void registerPlugin(std::string_view prototypeName, StreamSinkFactory::CtorFunc&& constructor);
+    
 
     auto getInstancePrototype(std::string_view name) const;
 
@@ -32,6 +38,7 @@ public:
 private:
     BaseVisitorFactory visitorFactory;
     CoreVisitorFactory coreVisitorFactory;
+    StreamSinkFactory  streamSinkFactory;
 
 };
 
