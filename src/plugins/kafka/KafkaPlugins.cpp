@@ -26,7 +26,7 @@ auto registerPlugins(msge::Core& core)
     auto&                    registry = core.getPluginRegistry();
     try
     {
-        auto [name, proto] = std::make_pair("KafkaStream", common::GenericFactory<msge::KafkaStreamAdaptor, msge::Core&>::proto());
+        auto [name, proto] = std::make_pair("KafkaStream", common::GenericFactory<msge::KafkaStreamAdaptor, msge::Core&, const msge::StreamSinkConfig&>::proto());
         registry.registerPlugin(name, proto);
         names.emplace_back(name);
     }
@@ -37,7 +37,7 @@ auto registerPlugins(msge::Core& core)
     return names;
 }
 
-const static std::string pluginName = "DefaultPlugin";
+const static std::string pluginName = "KafkaPlugin";
 
 extern "C" DEFAULT_PLUGIN_API void getInfo(common::PluginInfo& info)
 {

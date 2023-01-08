@@ -22,6 +22,7 @@ const auto       topic = "test";
 class KafkaStreamAdaptor : public StreamSink
 {
 public:
+
     using StreamSink::StreamSink;
 
     bool debug = false;

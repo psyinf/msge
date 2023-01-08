@@ -27,3 +27,9 @@ std::unique_ptr<msge::CoreEntityVisitor> msge::plugins::PluginRegistry::getCoreV
     return coreVisitorFactory.make(name, core);
 }
 
+std::unique_ptr<msge::StreamSink> msge::plugins::PluginRegistry::getStreamSinkPrototype(const std::string_view name, msge::Core& core, const StreamSinkConfig& cfg) const
+{
+    return streamSinkFactory.make(name, core, cfg);
+}
+
+

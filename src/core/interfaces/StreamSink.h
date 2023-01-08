@@ -1,6 +1,6 @@
 #pragma once
 #include <SerializationBuffer.h>
-
+#include <CoreDefinitions.h>
 namespace msge
 {
 class Core;
@@ -8,7 +8,7 @@ class Core;
 class StreamSink
 {
 public:
-    StreamSink(Core& core)
+    StreamSink(Core& core, const StreamSinkConfig&)
         : core(core)
     {
     }
@@ -17,6 +17,7 @@ public:
     virtual void operator()(const msge::EntitySerializationBuffer& b) = 0;
 
     Core& core;
+    StreamSinkConfig conf;
 };
 
 

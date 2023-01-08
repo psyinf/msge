@@ -5,7 +5,7 @@
 #endif
 #include "Core.h"
 #include "CoreConfig.h"
-#include "KafkaStreamAdapter.h"
+#include "CoreDefinitions.h"
 
 #include <ArrayTaskQueue.h>
 #include <BasicScheduler.h>
@@ -82,33 +82,9 @@ public:
         reflectAtBounds(spatial);
     }
 };
-/**
- * Simple stream sink
- */
-
-class SerializationBufferStreamAdaptor
-{
-public:
-    SerializationBufferStreamAdaptor(std::ostream& ostream)
-        : stream(ostream.rdbuf())
-    {
-    }
 
 
-    void operator()(const EntitySerializationBuffer& b)
-    {
-        stream << b;
-    }
 
-
-private:
-    std::ostream stream;
-};
-
-
-std::ofstream                    outstream("outstream.txt");
-SerializationBufferStreamAdaptor sa(outstream);
-KafkaStreamAdaptor               ka;
 
 auto makeMover(std::string_view name, common::math::Dynamic&& s)
 {
@@ -170,9 +146,10 @@ void setupScene(msge::BaseScene& scene)
 
 void setupTasks(Core& core)
 {
+    auto ka             = std::shared_ptr<msge::StreamSink>(core.getPluginRegistry().getStreamSinkPrototype("KafkaStream", core, EmtpyStreamSinkConfig));
     auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
-    // jsonSerializer->setSink(std::bind_front(&SerializationBufferStreamAdaptor::operator(), &sa));
-    jsonSerializer->setSink(std::bind_front(&KafkaStreamAdaptor::operator(), &ka));
+ 
+    jsonSerializer->setSink([ka](const auto& e) { (*ka)(e); });
 
 
     std::reference_wrapper<Mover>         m  = core.getScene("root").findEntity<Mover>("g1.g2.m1").value();
@@ -182,12 +159,11 @@ void setupTasks(Core& core)
     core.addTask("frameStart", [](const auto& frame_stamp) {
         if (frame_stamp.frameNumber % 1000 == 0)
         {
-            std::cout << " starting frame  " << frame_stamp.frameNumber << std::endl;
+            std::cout << " starting frame: " << frame_stamp.frameNumber << std::endl;
         }
     });
 
     core.addTask("Serialize", [&core, jsonSerializer]([[maybe_unused]] const auto& frame_stamp) {
-        //if (0 == frame_stamp.frameNumber % 5)
         {
             core.getScene("root").runVisitor(*jsonSerializer, nullptr);
         }
@@ -204,7 +180,7 @@ void setupTasks(Core& core)
     core.addTask("frameEnd", [](auto& frame_stamp) {
         if (frame_stamp.frameNumber % 1000 == 0)
         {
-            std::cout << " starting frame  " << frame_stamp.frameNumber << std::endl;
+            std::cout << " end of frame: " << frame_stamp.frameNumber << std::endl;
         }
     });
 }
