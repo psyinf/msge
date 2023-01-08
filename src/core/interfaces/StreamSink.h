@@ -14,7 +14,7 @@ public:
     }
 
     virtual ~StreamSink()                                             = default;
-    virtual void operator()(const msge::EntitySerializationBuffer& b) = 0;
+    virtual void operator()(std::string_view descriptor, const msge::EntitySerializationBuffer& b) = 0;
 
     Core& core;
     StreamSinkConfig conf;

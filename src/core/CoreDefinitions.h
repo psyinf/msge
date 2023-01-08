@@ -12,5 +12,5 @@ using TypeId = FixedString<64>;
 using SceneId = FixedString<256>;
 
 using StreamSinkConfig = nlohmann::json;
-const auto EmtpyStreamSinkConfig = nlohmann::json{};
+const auto EmtpyStreamSinkConfig = nlohmann::json{"{}"_json};
 } // namespace msge

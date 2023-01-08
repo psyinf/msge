@@ -18,32 +18,54 @@ const Properties props({
     {"bootstrap.servers", {"127.0.0.1:9092"}},
     {"enable.idempotence", {"true"}},
 });
-const auto       topic = "test";
+
+struct AdapterClientProperties
+{
+    std::string server = {"127.0.0.1:9092"};
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(AdapterClientProperties, server)
+    Properties makeProperties() const
+    {
+        return Properties({{"bootstrap.servers", server},
+                           {"enable.idempotence",
+                            {"true"}}});
+    }
+};
+
+
+struct StreamAdapterProperties
+{
+    AdapterClientProperties adapter = {};
+    bool                    debug = false;
+    bool                    async = true;
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(StreamAdapterProperties, adapter, debug, async)
+};
+
 class KafkaStreamAdaptor : public StreamSink
 {
 public:
+    KafkaStreamAdaptor(Core& core, const StreamSinkConfig& cfg)
+        : StreamSink(core, cfg)
+        , properties(cfg.get<StreamAdapterProperties>())
+        , producer(std::make_unique<KafkaProducer>( properties.adapter.makeProperties()))
+    {}
 
-    using StreamSink::StreamSink;
 
-    bool debug = false;
-    bool async = true;
-
-    void operator()(const msge::EntitySerializationBuffer& b)
+    void operator()(std::string_view descriptor, const msge::EntitySerializationBuffer& b) override
     {
-        auto record = ProducerRecord(topic,
+        auto record = ProducerRecord(Topic(descriptor),
                                      Key(b.key.data(), b.key.size()),
                                      Value(b.buffer.data(), b.buffer.size()));
 
-        if (async)
+        if (properties.async)
         {
             // Send the message.
             try
             {
-                producer.send(
+                producer->send(
                     record,
                     // The delivery report handler
                     [this](const RecordMetadata& metadata, const Error& error) {
-                        if (!error && debug)
+                        if (!error && properties.debug)
                         {
                             std::cout << "% Message delivered: " << metadata.toString() << std::endl;
                         }
@@ -65,8 +87,8 @@ public:
             // Send the message.
             try
             {
-                const RecordMetadata metadata = producer.syncSend(record);
-                if (debug)
+                const RecordMetadata metadata = producer->syncSend(record);
+                if (properties.debug)
                 {
                     std::cout << "% Message delivered: " << metadata.toString() << std::endl;
                 }
@@ -79,7 +101,9 @@ public:
     }
 
 private:
-    KafkaProducer producer = KafkaProducer{props};
+    StreamAdapterProperties        properties;
+    std::unique_ptr<KafkaProducer>           producer;
+   
 };
 
 } // namespace msge

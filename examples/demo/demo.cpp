@@ -111,7 +111,7 @@ auto makeGroup(std::string_view name, std::string_view type)
     return std::make_shared<CompoundEntity>(name, type);
 }
 
-
+//TODO: setup from json/yaml
 void setupScene(msge::BaseScene& scene)
 {
     const auto cube = "cube";
@@ -146,10 +146,12 @@ void setupScene(msge::BaseScene& scene)
 
 void setupTasks(Core& core)
 {
+    //get a kafka stream sink for the updates
     auto ka             = std::shared_ptr<msge::StreamSink>(core.getPluginRegistry().getStreamSinkPrototype("KafkaStream", core, EmtpyStreamSinkConfig));
+    // a serializer will create scene state snap-shots that are sent to a sink
     auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
  
-    jsonSerializer->setSink([ka](const auto& e) { (*ka)(e); });
+    jsonSerializer->setSink([ka](const auto& e) { (*ka)("scene.fullupdate", e); });
 
 
     std::reference_wrapper<Mover>         m  = core.getScene("root").findEntity<Mover>("g1.g2.m1").value();

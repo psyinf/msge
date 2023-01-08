@@ -19,7 +19,7 @@ public:
         stream = std::make_unique<std::ostream>(os.rdbuf());
     }
 
-    void operator()(const EntitySerializationBuffer& b) override
+    void operator()(std::string_view descriptor, const EntitySerializationBuffer& b) override
     {
         *stream << b;
     }
