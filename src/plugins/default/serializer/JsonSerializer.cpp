@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <serializers/SpatialJsonSerializer.h>
 #include <serializers/GmtlJsonSerializer.h>
+#include <serializers/StateJsonSerializer.h>
 
 #include <entities/BaseEntity.h>
 #include <entities/CompoundEntity.h>
@@ -21,6 +22,7 @@ void serializeBase(nlohmann::json& c, const BaseEntity& entity)
 {
     c["id"]   = entity.id;
     c["type"] = entity.type;
+    c["state"] = *entity.entityState;
 }
 
 EntitySerializationBuffer convert(const nlohmann::json& json, const std::string& id)

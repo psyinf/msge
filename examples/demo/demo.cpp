@@ -1,8 +1,3 @@
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <WinSock2.h>
-#undef WIN32_LEAN_AND_MEAN
-#endif
 #include "Core.h"
 #include "CoreConfig.h"
 #include "CoreDefinitions.h"
@@ -21,6 +16,13 @@
 #include <plugins/PluginRegistry.h>
 #include <thread>
 #include <visitors/FindEntityVisitor.h>
+
+#include "Probe.h"
+
+/**
+ * Boilerplate and demo project to move towards the goal to develop a space game based around a "von Neumann"-Probe. Demonstrates binding of simulation to render-frontend via event streaming (e.g. Kafka)
+ */
+
 
 using namespace msge;
 class SceneObject
@@ -84,8 +86,6 @@ public:
 };
 
 
-
-
 auto makeMover(std::string_view name, common::math::Dynamic&& s)
 {
     auto e     = std::make_shared<Mover>(name, "cone");
@@ -111,9 +111,10 @@ auto makeGroup(std::string_view name, std::string_view type)
     return std::make_shared<CompoundEntity>(name, type);
 }
 
-//TODO: setup from json/yaml
+// TODO: setup from json/yaml
 void setupScene(msge::BaseScene& scene)
 {
+   
     const auto cube = "cube";
     // static entities as scene markers
     scene.addEntity(makeStaticEntity("a111", cube, common::math::Spatial{gmtl::Point3d{-10, -10, -10}}));
@@ -141,16 +142,18 @@ void setupScene(msge::BaseScene& scene)
     m2->addChildren(makeStaticEntity("p4", cube, common::math::Spatial{gmtl::Point3d{0.75, 0.75, -1}}));
 
     g2->addChildren(m2);
+
+  
 }
 
 
 void setupTasks(Core& core)
 {
-    //get a kafka stream sink for the updates
-    auto ka             = std::shared_ptr<msge::StreamSink>(core.getPluginRegistry().getStreamSinkPrototype("KafkaStream", core, EmtpyStreamSinkConfig));
+    // get a kafka stream sink for the updates
+    auto ka = std::shared_ptr<msge::StreamSink>(core.getPluginRegistry().getStreamSinkPrototype("KafkaStream", core, EmtpyStreamSinkConfig));
     // a serializer will create scene state snap-shots that are sent to a sink
     auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
- 
+
     jsonSerializer->setSink([ka](const auto& e) { (*ka)("scene.fullupdate", e); });
 
 
