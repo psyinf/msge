@@ -30,10 +30,8 @@ class SimulationEntity
 {
 public:
     
-    virtual void frame(const msge::FrameStamp& fs) = 0
-    {
-        
-    }
+    virtual void frame(const msge::FrameStamp& fs) = 0;
+    
 
     std::shared_ptr<CompoundEntity> compoundEntity;
     
