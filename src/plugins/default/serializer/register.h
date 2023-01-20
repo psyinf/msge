@@ -4,7 +4,7 @@
 #include <Core.h>
 #include <plugins/PluginBase.h>
 #include <plugins/PluginRegistry.h>
-#include <serializer/JsonSerializer.h>
+#include <serializer/JsonStateSerializer.h>
 
 #include <fmt/core.h>
 
@@ -16,7 +16,7 @@ auto registerPlugins(msge::Core& core)
     auto&                    registry = core.getPluginRegistry();
     try
     {
-        auto [name, proto] = std::make_pair("JsonSerializer", common::GenericFactory<msge::plugin::JsonSerializer, msge::Core&>::proto());
+        auto [name, proto] = std::make_pair("JsonStateSerializer", common::GenericFactory<msge::plugin::JsonStateSerializer, msge::Core&>::proto());
         registry.registerPlugin(name, proto);
         names.emplace_back(name);
     }

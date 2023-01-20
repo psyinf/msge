@@ -1,5 +1,5 @@
 #pragma once
-#include <entities/BaseEntity.h>
+#include <entities/EntityState.h>
 #include <nlohmann/json.hpp>
 
 namespace msge

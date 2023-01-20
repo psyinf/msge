@@ -10,7 +10,7 @@
 #include <ArrayTaskQueue.h>
 #include <BasicScheduler.h>
 #include <SerializationBuffer.h>
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <entities/DynamicEntity.h>
 #include <entities/StaticEntity.h>
 #include <exception>
@@ -70,11 +70,11 @@ public:
     }
 };
 
-class CompoundMover : public CompoundEntity
+class CompoundMover : public DynamicCompoundEntity
     , public SceneObject
 {
 public:
-    using CompoundEntity::CompoundEntity;
+    using DynamicCompoundEntity::DynamicCompoundEntity;
     // move along some simple path
     void frame(const FrameStamp& fs) override
     {
@@ -132,7 +132,7 @@ auto makeStaticEntity(std::string_view name, std::string_view type, const common
 
 auto makeGroup(std::string_view name, std::string_view type)
 {
-    return std::make_shared<CompoundEntity>(name, type);
+    return std::make_shared<DynamicCompoundEntity>(name, type);
 }
 
 

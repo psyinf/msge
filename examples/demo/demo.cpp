@@ -5,7 +5,7 @@
 #include <ArrayTaskQueue.h>
 #include <BasicScheduler.h>
 #include <SerializationBuffer.h>
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <entities/DynamicEntity.h>
 #include <entities/StaticEntity.h>
 #include <exception>
@@ -72,11 +72,11 @@ public:
     }
 };
 
-class CompoundMover : public CompoundEntity
+class CompoundMover : public DynamicCompoundEntity
     , public SceneObject
 {
 public:
-    using CompoundEntity::CompoundEntity;
+    using DynamicCompoundEntity::DynamicCompoundEntity;
     // move along some simple path
     void frame(const FrameStamp& fs) override
     {
@@ -108,7 +108,7 @@ auto makeStaticEntity(std::string_view name, std::string_view type, const common
 
 auto makeGroup(std::string_view name, std::string_view type)
 {
-    return std::make_shared<CompoundEntity>(name, type);
+    return std::make_shared<DynamicCompoundEntity>(name, type);
 }
 
 // TODO: setup from json/yaml
@@ -152,7 +152,7 @@ void setupTasks(Core& core)
     // get a kafka stream sink for the updates
     auto ka = std::shared_ptr<msge::StreamSink>(core.getPluginRegistry().getStreamSinkPrototype("KafkaStream", core, EmtpyStreamSinkConfig));
     // a serializer will create scene state snap-shots that are sent to a sink
-    auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
+    auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonStateSerializer", core));
 
     jsonSerializer->setSink([ka](const auto& e) { (*ka)("scene.fullupdate", e); });
 

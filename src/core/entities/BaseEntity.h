@@ -3,6 +3,7 @@
 #include <FrameStamp.h>
 #include <array>
 #include <math/Spatial.h>
+#include <serializers/StateJsonSerializer.h>
 #include <visitors/BaseEntityVisitor.h>
 
 
@@ -19,10 +20,6 @@ public:
     virtual void traverse(T& bev) = 0;
 };
 
-class EntityState
-{
-
-};
 
 
 class BaseEntity : public VisitorInterface<BaseEntityVisitor>
@@ -43,12 +40,22 @@ public:
     {
     }
 
+    virtual void load(const JsonType& json)
+    {
+        *entityState = json["state"];
+    }
+
+    virtual void save(JsonType& json) const
+    {
+        json["state"] = *entityState;
+    }
+
     virtual ~BaseEntity() = default;
 
     BaseEntity() = default;
 
-    std::shared_ptr<EntityState>    entityState;
-    const EntityId id;
-    const TypeId   type;
+    std::shared_ptr<EntityState> entityState;
+    const EntityId               id;
+    const TypeId                 type;
 };
 } // namespace msge

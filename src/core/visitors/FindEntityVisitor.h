@@ -32,7 +32,7 @@ protected:
 
     void visit(StaticEntity& entity) override;
 
-    void visit(CompoundEntity& entity) override;
+    void visit(DynamicCompoundEntity& entity) override;
 
     void visit(DynamicEntity& entity) override;
 

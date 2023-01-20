@@ -1,5 +1,5 @@
 #pragma once
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <entities/StaticEntity.h>
 #include <entities/DynamicEntity.h>
 #include <fmt/core.h>
@@ -22,7 +22,7 @@ public:
         print(fmt::format("Static: {}", entity.id));
     }
 
-    void visit(CompoundEntity& entity) override
+    void visit(DynamicCompoundEntity& entity) override
     {
         print(fmt::format("Compound: {}", entity.id));
         traverse(entity);

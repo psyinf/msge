@@ -1,5 +1,5 @@
 #pragma once
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <serializers/SpatialJsonSerializer.h>
 namespace msge
 {
@@ -24,6 +24,15 @@ namespace msge
  *** We need a another visitor to cover specialized properties in terms of serialization
  */
 
+/**
+ * 
+ TODO:
+
+load BaseEntity serialization
+based on type create XYZEntity A
+add A to scene
+visit scene and derive SimulationEntities
+ */
 
 
 class SimulationEntity 
@@ -33,7 +42,7 @@ public:
     virtual void frame(const msge::FrameStamp& fs) = 0;
     
 
-    std::shared_ptr<CompoundEntity> compoundEntity;
+    std::shared_ptr<DynamicCompoundEntity> compoundEntity;
     
 };
 
