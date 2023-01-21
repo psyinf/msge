@@ -24,7 +24,8 @@ public:
     
     virtual bool hasEntity(const EntityId& entityId) = 0;
 
-    virtual void runVisitor(BaseEntityVisitor& visitor, const std::function<bool(BaseEntityVisitor&)>& callback) = 0;
+    virtual void runVisitor(
+        BaseEntityVisitor& visitor, const std::function<bool(BaseEntityVisitor&)>& callback = []([[maybe_unused]] const auto& v) { return true; }) = 0;
     
     virtual std::optional<std::reference_wrapper<BaseEntity>> findEntity(std::string_view) = 0;
     

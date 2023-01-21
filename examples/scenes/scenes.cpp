@@ -28,7 +28,7 @@ try
     }
     
 
-    DynamicCompoundEntity group1 = DynamicCompoundEntity("g1", "gt1");
+    auto group1 = DynamicCompoundEntity("g1", "gt1");
     group1.addChildren(std::make_shared<BaseEntity>("sub1", "st1"));
     group1.addChildren(std::make_shared<BaseEntity>("sub2", "st1"));
     bs->addEntity(std::make_shared<DynamicCompoundEntity>(std::move(group1)));

@@ -20,7 +20,8 @@
 #include <math/Spatial.h>
 #include <plugins/PluginRegistry.h>
 #include <thread>
-#include <visitors/FindEntityVisitor.h>
+#include <visitors/DefaultEntityVisitor.h>
+#include <visitors/QualifiedNameStack.h>
 
 using namespace msge;
 class SceneObject
@@ -136,6 +137,50 @@ auto makeGroup(std::string_view name, std::string_view type)
 }
 
 
+class CollectSceneEntities : public DefaultEntityVisitor
+{
+    std::map<std::string, std::reference_wrapper<BaseEntity>> collected;
+    QualifiedNameStack                               nameStack;
+
+public:
+    void visit(BaseEntity& entity) override
+    {
+        nameStack.push(entity);
+        collected.insert_or_assign(nameStack.getQualifiedName(), entity);
+        nameStack.pop();
+    }
+
+     void visit(DynamicCompoundEntity& entity) override
+    {
+        nameStack.push(entity);
+        collected.insert_or_assign(nameStack.getQualifiedName(), entity);
+        traverse(entity);
+        nameStack.pop();
+    }
+
+    const auto& getCollected() const {
+        return collected;
+    }
+};
+
+
+void saveScene(msge::BaseScene& scene)
+{
+    std::ofstream os("data/test_out.json");
+    CollectSceneEntities cse;
+    scene.runVisitor(cse);
+    std::ranges::for_each(cse.getCollected(), [](const auto& p) {auto [k,v] = p; std::cout << k << "("<< v.get().id << ")" << std::endl; });
+    // TODO: iterate over all
+    // os <<
+}
+
+void loadScene()
+{
+    std::ifstream is("data/test_scene.json");
+    auto          scene = nlohmann::json::parse(is);
+    // scene.get < std::list<BaseEntity> b;
+}
+
 void setupScene(msge::BaseScene& scene)
 {
     const auto cube = "cube";
@@ -165,6 +210,8 @@ void setupScene(msge::BaseScene& scene)
     m2->addChildren(makeStaticEntity("p4", cube, common::math::Spatial{gmtl::Point3d{0.75, 0.75, -1}}));
 
     g2->addChildren(m2);
+
+    saveScene(scene);
 }
 
 
@@ -187,7 +234,7 @@ void setupTasks(Core& core)
     });
 
     core.addTask("Serialize", [&core, jsonSerializer]([[maybe_unused]] const auto& frame_stamp) {
-        //if (0 == frame_stamp.frameNumber % 5)
+        // if (0 == frame_stamp.frameNumber % 5)
         {
             core.getScene("root").runVisitor(*jsonSerializer, nullptr);
         }
