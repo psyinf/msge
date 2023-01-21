@@ -5,7 +5,8 @@
 #include <fmt/core.h>
 #include <visitors/BaseEntityVisitor.h>
 #include <deque>
-#include "QualifiedEntityVisitor.h"
+#include "QualifiedNameStack.h"
+
 namespace msge
 {
 
