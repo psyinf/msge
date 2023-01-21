@@ -21,10 +21,6 @@ class TagTypedData
     T data;
     Type type;
 
-    T operator()() {
-        return data;
-    }
-
     T& operator()()
     {
         return data;
