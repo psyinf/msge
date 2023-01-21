@@ -36,8 +36,6 @@ protected:
 
     void visit(DynamicEntity& entity) override;
 
-    void finish() override;
-
 private:
     void                                              initializeNameStack(std::string_view name);
     bool                                              traversalStopped = true;

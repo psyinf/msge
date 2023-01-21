@@ -14,9 +14,13 @@ class VisitorInterface
 {
 public:
     ~VisitorInterface() = default;
-
+    /*
+    Implement to accept the Visitor
+    */
     virtual void accept(T& bev) = 0;
-
+    /*
+    Implement to traverse potential children
+    */
     virtual void traverse(T& bev) = 0;
 };
 
@@ -38,6 +42,7 @@ public:
 
     void traverse(BaseEntityVisitor& bev) override
     {
+        //to be implemented for structured entities
     }
 
     virtual void load(const JsonType& json)

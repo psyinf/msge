@@ -4,49 +4,50 @@
 #include <entities/DynamicEntity.h>
 #include <fmt/core.h>
 #include <visitors/BaseEntityVisitor.h>
+#include <deque>
+#include "QualifiedEntityVisitor.h"
 namespace msge
 {
 
 class LogEntityVisitor : public BaseEntityVisitor
 {
-    size_t level = 0;
+    QualifiedNameStack nameStack;
 
 public:
-    void visit(BaseEntity& entity) override
+    void visit(BaseEntity& e) override
     {
-        print(fmt::format("Base: {}", entity.id));
+        nameStack.push(e);
+        print(fmt::format("Base: {}", nameStack.getQualifiedName()));
+        nameStack.pop();
     }
 
-    void visit(StaticEntity& entity) override
+    void visit(StaticEntity& e) override
     {
-        print(fmt::format("Static: {}", entity.id));
+        nameStack.push(e);
+        print(fmt::format("Static: {}", nameStack.getQualifiedName()));
+        nameStack.pop();
     }
 
-    void visit(DynamicCompoundEntity& entity) override
+    void visit(DynamicCompoundEntity& e) override
     {
-        print(fmt::format("Compound: {}", entity.id));
-        traverse(entity);
+        nameStack.push(e);
+        print(fmt::format("Compound: {}", nameStack.getQualifiedName()));
+        traverse(e);
+        nameStack.pop();
     }
 
 
-    void visit(DynamicEntity& entity) override
+    void visit(DynamicEntity& e) override
     {
-        print(fmt::format("Dynamic: {}", entity.id));
+        nameStack.push(e);
+        print(fmt::format("Dynamic: {}", nameStack.getQualifiedName()));
+        nameStack.pop();
     }
-
-    void finish() override{};
-
 
 protected:
     virtual std::string indent() const
     {
-        // #TODO: replace with a clever approach
-        std::string indent;
-        for (auto i = 0u; i < level; ++i)
-        {
-            indent += "\t";
-        }
-        return indent;
+        return std::string(nameStack.size()-1, '\t');
     }
     virtual void print(std::string_view s)
     {
@@ -55,9 +56,7 @@ protected:
 
     void traverse(BaseEntity& e) override
     {
-        ++level;
-        e.traverse(*this);
-        --level;
+        e.traverse(*this);  
     }
 };
 

@@ -62,9 +62,6 @@ void msge::FindEntityVisitor::visit(StaticEntity& entity)
     visit((BaseEntity&)entity);
 }
 
-void msge::FindEntityVisitor::finish()
-{
-}
 
 void msge::FindEntityVisitor::initializeNameStack(std::string_view name)
 {

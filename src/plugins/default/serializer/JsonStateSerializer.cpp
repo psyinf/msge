@@ -93,8 +93,5 @@ plugin::JsonStateSerializer::JsonStateSerializer(Core& core)
 {
 }
 
-void plugin::JsonStateSerializer::finish()
-{
-}
 
 

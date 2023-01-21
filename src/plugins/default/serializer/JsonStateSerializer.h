@@ -36,8 +36,6 @@ public:
 
     void visit(DynamicEntity& entity) override;
 
-    void finish() override;
-
 protected:
     void traverse(BaseEntity& e) override;
 
