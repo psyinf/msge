@@ -26,76 +26,10 @@
 #include <visitors/CollectSceneEntitiesVisitor.h>
 #include <visitors/DefaultEntityVisitor.h>
 #include <visitors/QualifiedNameStack.h>
+#include <visitors/JsonEntitySerializer.h>
 #include <serializers/StateJsonSerializer.h>
 
 using namespace msge;
-
-/**
- * Simple stream sink
- */
-
-class SerializationBufferStreamAdaptor
-{
-public:
-    SerializationBufferStreamAdaptor(std::ostream& ostream)
-        : stream(ostream.rdbuf())
-    {
-    }
-
-
-    void operator()(const EntitySerializationBuffer& b)
-    {
-        stream << b;
-    }
-
-
-private:
-    std::ostream stream;
-};
-
-
-
-
-
-class SaveEntityVisitor : public BaseEntityVisitor
-{
-
-public:
-    SaveEntityVisitor(JsonType& jt)
-        : json(jt)
-    {
-    }
-
-    void visit(BaseEntity& entity) override
-    {
-        json["state"] = *entity.entityState;
-    }
-
-    void visit(StaticEntity& entity) override
-    {
-        json["spatial"] = entity.spatial;
-        visit(static_cast<BaseEntity&>(entity));
-    }
-
-    void visit(DynamicCompoundEntity& entity) override
-    {
-        json["spatial"] = entity.spatial;
-        visit(static_cast<BaseEntity&>(entity));
-    }
-
-    void visit(DynamicEntity& entity) override
-    {
-        json["spatial"] = entity.spatial;
-        visit(static_cast<BaseEntity&>(entity));
-    }
-
-protected:
-    void traverse(BaseEntity& e) override
-    {
-    }
-
-    JsonType& json;
-};
 
 /**
  * Simple method to serialize a scene to json
@@ -114,9 +48,9 @@ void saveScene(msge::BaseScene& scene)
         const auto& [name, item] = pair;
         fmt::print("{}\n", name);
         nlohmann::json    entity;
-        SaveEntityVisitor sev(entity);
+        JsonEntityVisitor jev(entity);
 
-        item.get().accept(sev);
+        item.get().accept(jev);
         auto data = nlohmann::json::object();
         entity["id"] = name;
         data["entity"] = entity;
@@ -141,7 +75,7 @@ try
     
   
     auto& scene = core.getScene("root");
-   
+    setupScene(scene);
     saveScene(scene);
 }
 catch (const std::exception& e)
