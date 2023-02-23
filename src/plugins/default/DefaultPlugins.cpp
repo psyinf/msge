@@ -27,9 +27,9 @@ extern "C" DEFAULT_PLUGIN_API void getInfo(common::PluginInfo& info)
 extern "C" DEFAULT_PLUGIN_API void registerPlugin(msge::Core& core)
 {
     auto registered_plugins = registerPlugins(core);
-    LOG(INFO) << fmt::format("Registered serializers(s): [ {} ]\n ", fmt::join(registered_plugins, " | "));
+    LOG(INFO) << fmt::format("Registered serializers(s): [ {} ] ", fmt::join(registered_plugins, " | "));
     auto registered_schedulers = registerSchedulers(core);
-    LOG(INFO) << fmt::format("Registered schedulers(s): [ {} ]\n ", fmt::join(registered_schedulers, " | "));
+    LOG(INFO) << fmt::format("Registered schedulers(s): [ {} ] ", fmt::join(registered_schedulers, " | "));
     auto registered_streamsinks = registerStreamSinks(core);
-    LOG(INFO) << fmt::format("Registered stream sink(s): [ {} ]\n ", fmt::join(registered_streamsinks, " | "));
+    LOG(INFO) << fmt::format("Registered stream sink(s): [ {} ] ", fmt::join(registered_streamsinks, " | "));
 }
