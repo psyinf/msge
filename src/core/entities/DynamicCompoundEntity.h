@@ -37,8 +37,9 @@ public:
 
    common::math::Dynamic spatial;
 
+    TypeId getTaggedType() const override { return "DynamicCompound"; }
 
-private:
+   private:
     std::vector<std::shared_ptr<BaseEntity>> children;
 };
 

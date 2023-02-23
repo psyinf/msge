@@ -23,13 +23,19 @@ public:
     */
     virtual void traverse(T& bev) = 0;
 };
+/**
+ * Interface to have a tagged Type
+ */
+class TaggedType
+{
+    virtual TypeId getTaggedType() const = 0;
+};
 
 
-
-class BaseEntity : public VisitorInterface<BaseEntityVisitor>
+class BaseEntity : public VisitorInterface<BaseEntityVisitor>, public TaggedType
 {
 public:
-    explicit BaseEntity(const EntityId& id, const TypeId& type)
+    explicit BaseEntity(const EntityId& id)
         : id{id}
         , type{type}
     {
@@ -53,7 +59,12 @@ public:
     virtual void save(JsonType& json) const
     {
         json["state"] = *entityState;
+        json["type"]  = type;
+        json["tag"]   = getTaggedType();
     }
+    
+
+    TypeId getTaggedType() const override { return "Base"; }
 
     virtual ~BaseEntity() = default;
 
@@ -62,5 +73,6 @@ public:
     std::shared_ptr<EntityState> entityState;
     const EntityId               id;
     const TypeId                 type;
+    
 };
 } // namespace msge

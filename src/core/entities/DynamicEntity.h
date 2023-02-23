@@ -29,5 +29,7 @@ public:
         BaseEntity::save(json);
         json["spatial"] = spatial;
     }
+
+     TypeId getTaggedType() const override { return "Dynamic"; }
 };
 } // namespace msge
