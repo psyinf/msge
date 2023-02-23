@@ -1,17 +1,15 @@
 #include "Core.h"
+
 #include "CoreConfig.h"
-
-#include <math/Spatial.h>
-
-#include "plugins/PluginRegistry.h"
-#include <plugins/CorePluginInterface.h>
 #include "plugins/PluginManager.h"
-#include <fmt/core.h>
+#include "plugins/PluginRegistry.h"
+
 #include <AbstractScheduler.h>
 #include <AbstractTaskQueue.h>
+#include <fmt/core.h>
+#include <math/Spatial.h>
+#include <plugins/CorePluginInterface.h>
 #include <scenes/SimpleScene.h>
-
-
 
 
 using namespace msge;
@@ -48,15 +46,28 @@ Core::CommandLineArgs Core::makeCommandLineArgs(int argc, char** argv)
 void Core::setup(const CoreConfig& config, const CommandLineArgs& args)
 {
     initializeLogging(args);
+    switch  (config.plugins.loadTypes)
+    {
+    case CoreConfig::Plugins::PluginTypes::ALL:
+        pluginManager->scanForPlugins(config.plugins.path, config.plugins.filter);
+        break;
+    case CoreConfig::Plugins::PluginTypes::DEFAULT:
+        LOG(INFO) << fmt::format("Skipping load of user plugins and all set filters.");
+        pluginManager->scanForPlugins(config.plugins.path + "/default" );
+        break;
+    case CoreConfig::Plugins::PluginTypes::NONE:
+        LOG(WARNING) << fmt::format("Skipping load of all plugins.");
+        break;
 
-    pluginManager->scanForPlugins(config.plugins_path);
-  
+    }
+
+
     for (const auto& [k, v] : pluginManager->getPluginList())
     {
         v->registerPlugin(*this);
-    }    
+    }
 
-    //scenes from configuration
+    // scenes from configuration
     rootScenes.insert({SceneId(config.default_scene), std::make_unique<SimpleScene>("root")});
 
     scheduler = schedulerPrototypes.getPrototype(config.scheduler_name)();
@@ -79,8 +90,7 @@ void Core::addTask(std::string_view name, std::function<void(const FrameStamp&)>
 std::future<void> Core::start()
 {
     scheduler->start();
-    return std::async(std::launch::async, [this]() { scheduler->run(); });   
+    return std::async(std::launch::async, [this]() { scheduler->run(); });
 }
 
 Core::~Core() = default;
-

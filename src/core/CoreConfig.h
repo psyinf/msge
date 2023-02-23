@@ -6,15 +6,30 @@
 namespace msge
 {
 
+
 struct CoreConfig
 {
-    std::string plugins_path = "plugins";
+    struct Plugins
+    {
+        enum class PluginTypes
+        {
+            ALL,
+            DEFAULT,
+            NONE,
+        };
+        std::string path = "plugins";
+        std::string filter = "*.dll"; //TODO: default plugin extension per platform
+        PluginTypes loadTypes = PluginTypes::ALL;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(Plugins, path, filter, loadTypes)
+    };
+    
+    Plugins     plugins;
     std::string default_scene = "root"; //
     std::string scheduler_name = "BasicScheduler";
     std::string task_queue_name = "ArrayTaskQueue";
     
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(CoreConfig, plugins_path, default_scene)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(CoreConfig, plugins, default_scene)
 };
 
 }
