@@ -5,6 +5,7 @@
 #include <exception>
 #include <iostream>
 #include <memory>
+#include <visitors/CollectSceneEntitiesVisitor.h>
 
 
 using namespace msge;
@@ -34,7 +35,10 @@ try
     bs->addEntity(std::make_shared<DynamicCompoundEntity>(std::move(group1)));
     bs->addEntity(std::make_shared<BaseEntity>("be1", "t1"));
     msge::LogEntityVisitor lev;
-
+    CollectSceneEntitiesVisitor cse;
+    bs->runVisitor(cse);
+    std::ranges::for_each(cse.getCollected(), [](const auto& p) {auto [k,v] = p; std::cout << k << "("<< v.get().id << ")" << std::endl; });
+  
     
 
     bs->runVisitor(lev);

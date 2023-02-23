@@ -7,6 +7,9 @@
 
 namespace msge
 {
+/*
+   Visitor that delegates to the BaseEntity visit function per default. Traversal of CompoundEntites is performed too.
+*/
 
 class DefaultEntityVisitor : public BaseEntityVisitor
 {

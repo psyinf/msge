@@ -1,4 +1,4 @@
-set(APP_NAME demo2)
+set(APP_NAME savescene)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
