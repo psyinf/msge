@@ -13,7 +13,8 @@ inline void to_json(nlohmann::json& j, const FixedLengthString<LENGTH>& p)
 template <size_t LENGTH>
 inline void from_json(const nlohmann::json& j, FixedLengthString<LENGTH>& p)
 {
-    j.get();
+    throw std::runtime_error("Not yet implemented");
+    //j.get();
 }
 
 
