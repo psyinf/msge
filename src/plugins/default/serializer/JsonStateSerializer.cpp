@@ -1,13 +1,14 @@
-#include "JsonSerializer.h"
+#include "JsonStateSerializer.h"
 
 #include <Core.h>
 #include <CoreDefinitions.h>
 #include <nlohmann/json.hpp>
 #include <serializers/SpatialJsonSerializer.h>
 #include <serializers/GmtlJsonSerializer.h>
+#include <serializers/StateJsonSerializer.h>
 
 #include <entities/BaseEntity.h>
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <entities/StaticEntity.h>
 #include <entities/DynamicEntity.h>
 
@@ -21,6 +22,7 @@ void serializeBase(nlohmann::json& c, const BaseEntity& entity)
 {
     c["id"]   = entity.id;
     c["type"] = entity.type;
+    c["state"] = *entity.entityState;
 }
 
 EntitySerializationBuffer convert(const nlohmann::json& json, const std::string& id)
@@ -32,7 +34,7 @@ EntitySerializationBuffer convert(const nlohmann::json& json, const std::string&
 
     return {id, v};
 }
-std::string buildPath(const plugin::JsonSerializer::IdStack& ids, const EntityId& currentId)
+std::string buildPath(const plugin::JsonStateSerializer::IdStack& ids, const EntityId& currentId)
 {
     std::string res;
     for (const auto& id : ids)
@@ -42,14 +44,14 @@ std::string buildPath(const plugin::JsonSerializer::IdStack& ids, const EntityId
     return res.append(std::string(currentId.data()));
 }
 
-void plugin::JsonSerializer::traverse(BaseEntity& e)
+void plugin::JsonStateSerializer::traverse(BaseEntity& e)
 {
     idStack.push_back(e.id);
     e.traverse(*this);
     idStack.pop_back();
 }
 
-void plugin::JsonSerializer::visit(CompoundEntity& entity)
+void plugin::JsonStateSerializer::visit(DynamicCompoundEntity& entity)
 {
     nlohmann::json c;
     serializeBase(c, entity);
@@ -60,7 +62,7 @@ void plugin::JsonSerializer::visit(CompoundEntity& entity)
     traverse(entity);
 }
 
-void plugin::JsonSerializer::visit(StaticEntity& entity)
+void plugin::JsonStateSerializer::visit(StaticEntity& entity)
 {
     nlohmann::json c;
     serializeBase(c, entity);
@@ -69,7 +71,7 @@ void plugin::JsonSerializer::visit(StaticEntity& entity)
     getSink()(convert(c, buildPath(idStack, entity.id)));
 }
 
-void plugin::JsonSerializer::visit(DynamicEntity& entity)
+void plugin::JsonStateSerializer::visit(DynamicEntity& entity)
 {
     nlohmann::json c;
     serializeBase(c, entity);
@@ -78,7 +80,7 @@ void plugin::JsonSerializer::visit(DynamicEntity& entity)
     getSink()(convert(c, buildPath(idStack, entity.id)));
 }
 
-void plugin::JsonSerializer::visit(BaseEntity& entity)
+void plugin::JsonStateSerializer::visit(BaseEntity& entity)
 {
     nlohmann::json c;
     serializeBase(c, entity);
@@ -86,13 +88,10 @@ void plugin::JsonSerializer::visit(BaseEntity& entity)
     getSink()(convert(c, buildPath(idStack, entity.id)));
 }
 
-plugin::JsonSerializer::JsonSerializer(Core& core)
+plugin::JsonStateSerializer::JsonStateSerializer(Core& core)
     : CoreEntityVisitor(core)
 {
 }
 
-void plugin::JsonSerializer::finish()
-{
-}
 
 

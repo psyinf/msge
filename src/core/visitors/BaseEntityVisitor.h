@@ -4,7 +4,7 @@ namespace msge{
 
 class BaseEntity;
 class StaticEntity;
-class CompoundEntity;
+class DynamicCompoundEntity;
 class DynamicEntity;
 class BaseEntityVisitor
 {
@@ -14,12 +14,14 @@ public:
 
     virtual void visit(BaseEntity& entity) = 0;
 	virtual void visit(StaticEntity& entity) = 0;
-    virtual void visit(CompoundEntity& entity) = 0;
+    virtual void visit(DynamicCompoundEntity& entity) = 0;
     virtual void visit(DynamicEntity& entity) = 0;
-    virtual void finish()                      = 0;
 
 protected:
-    virtual void traverse(BaseEntity&)         = 0;
+    /**
+    * Implement to delegate to BaseEntity::traverse for structured entities
+    */
+    virtual void traverse(BaseEntity& e);
 };
 
 

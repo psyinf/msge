@@ -17,26 +17,24 @@ namespace msge::plugin
 {
 
 /**
- * Serializer that converts a list of entities individually.
+ * Serializer that produces State snapshots (e.g. to serve as updates to a rendering back-end)
  */
 
-class JsonSerializer : public CoreEntityVisitor
+class JsonStateSerializer : public CoreEntityVisitor
 {
 public:
     using IdStack = std::deque<msge::EntityId>;
 
-    JsonSerializer(Core& core);
+    explicit JsonStateSerializer(Core& core);
 
 
     void visit(BaseEntity& entity) override;
 
     void visit(StaticEntity& entity) override;
 
-    void visit(CompoundEntity& entity) override;
+    void visit(DynamicCompoundEntity& entity) override;
 
     void visit(DynamicEntity& entity) override;
-
-    void finish() override;
 
 protected:
     void traverse(BaseEntity& e) override;

@@ -1,16 +1,11 @@
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <WinSock2.h>
-#undef WIN32_LEAN_AND_MEAN
-#endif
 #include "Core.h"
 #include "CoreConfig.h"
-#include "KafkaStreamAdapter.h"
+#include "CoreDefinitions.h"
 
 #include <ArrayTaskQueue.h>
 #include <BasicScheduler.h>
 #include <SerializationBuffer.h>
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <entities/DynamicEntity.h>
 #include <entities/StaticEntity.h>
 #include <exception>
@@ -21,6 +16,13 @@
 #include <plugins/PluginRegistry.h>
 #include <thread>
 #include <visitors/FindEntityVisitor.h>
+
+#include "Probe.h"
+
+/**
+ * Boilerplate and demo project to move towards the goal to develop a space game based around a "von Neumann"-Probe. Demonstrates binding of simulation to render-frontend via event streaming (e.g. Kafka)
+ */
+
 
 using namespace msge;
 class SceneObject
@@ -70,11 +72,11 @@ public:
     }
 };
 
-class CompoundMover : public CompoundEntity
+class CompoundMover : public DynamicCompoundEntity
     , public SceneObject
 {
 public:
-    using CompoundEntity::CompoundEntity;
+    using DynamicCompoundEntity::DynamicCompoundEntity;
     // move along some simple path
     void frame(const FrameStamp& fs) override
     {
@@ -82,33 +84,7 @@ public:
         reflectAtBounds(spatial);
     }
 };
-/**
- * Simple stream sink
- */
 
-class SerializationBufferStreamAdaptor
-{
-public:
-    SerializationBufferStreamAdaptor(std::ostream& ostream)
-        : stream(ostream.rdbuf())
-    {
-    }
-
-
-    void operator()(const EntitySerializationBuffer& b)
-    {
-        stream << b;
-    }
-
-
-private:
-    std::ostream stream;
-};
-
-
-std::ofstream                    outstream("outstream.txt");
-SerializationBufferStreamAdaptor sa(outstream);
-KafkaStreamAdaptor               ka;
 
 auto makeMover(std::string_view name, common::math::Dynamic&& s)
 {
@@ -132,12 +108,13 @@ auto makeStaticEntity(std::string_view name, std::string_view type, const common
 
 auto makeGroup(std::string_view name, std::string_view type)
 {
-    return std::make_shared<CompoundEntity>(name, type);
+    return std::make_shared<DynamicCompoundEntity>(name, type);
 }
 
-
+// TODO: setup from json/yaml
 void setupScene(msge::BaseScene& scene)
 {
+   
     const auto cube = "cube";
     // static entities as scene markers
     scene.addEntity(makeStaticEntity("a111", cube, common::math::Spatial{gmtl::Point3d{-10, -10, -10}}));
@@ -165,14 +142,19 @@ void setupScene(msge::BaseScene& scene)
     m2->addChildren(makeStaticEntity("p4", cube, common::math::Spatial{gmtl::Point3d{0.75, 0.75, -1}}));
 
     g2->addChildren(m2);
+
+  
 }
 
 
 void setupTasks(Core& core)
 {
-    auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonSerializer", core));
-    // jsonSerializer->setSink(std::bind_front(&SerializationBufferStreamAdaptor::operator(), &sa));
-    jsonSerializer->setSink(std::bind_front(&KafkaStreamAdaptor::operator(), &ka));
+    // get a kafka stream sink for the updates
+    auto ka = std::shared_ptr<msge::StreamSink>(core.getPluginRegistry().getStreamSinkPrototype("KafkaStream", core, EmtpyStreamSinkConfig));
+    // a serializer will create scene state snap-shots that are sent to a sink
+    auto jsonSerializer = std::shared_ptr<msge::CoreEntityVisitor>(core.getPluginRegistry().getCoreVisitorPrototype("JsonStateSerializer", core));
+
+    jsonSerializer->setSink([ka](const auto& e) { (*ka)("scene.fullupdate", e); });
 
 
     std::reference_wrapper<Mover>         m  = core.getScene("root").findEntity<Mover>("g1.g2.m1").value();
@@ -182,12 +164,11 @@ void setupTasks(Core& core)
     core.addTask("frameStart", [](const auto& frame_stamp) {
         if (frame_stamp.frameNumber % 1000 == 0)
         {
-            std::cout << " starting frame  " << frame_stamp.frameNumber << std::endl;
+            std::cout << " starting frame: " << frame_stamp.frameNumber << std::endl;
         }
     });
 
     core.addTask("Serialize", [&core, jsonSerializer]([[maybe_unused]] const auto& frame_stamp) {
-        //if (0 == frame_stamp.frameNumber % 5)
         {
             core.getScene("root").runVisitor(*jsonSerializer, nullptr);
         }
@@ -204,7 +185,7 @@ void setupTasks(Core& core)
     core.addTask("frameEnd", [](auto& frame_stamp) {
         if (frame_stamp.frameNumber % 1000 == 0)
         {
-            std::cout << " starting frame  " << frame_stamp.frameNumber << std::endl;
+            std::cout << " end of frame: " << frame_stamp.frameNumber << std::endl;
         }
     });
 }

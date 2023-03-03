@@ -10,7 +10,7 @@ namespace msge
 /**
  * Compound of entities. The spatial is the base for all children. I.e. their spatial is considered relative to the base. Spatial is a Dynamic
  */
-class CompoundEntity : public BaseEntity
+class DynamicCompoundEntity : public BaseEntity
 {
 
 public:
@@ -37,8 +37,9 @@ public:
 
    common::math::Dynamic spatial;
 
+    TypeId getTaggedType() const override { return "DynamicCompound"; }
 
-private:
+   private:
     std::vector<std::shared_ptr<BaseEntity>> children;
 };
 

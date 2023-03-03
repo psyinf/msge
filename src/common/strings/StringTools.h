@@ -48,4 +48,37 @@ public:
 
         return output;
     }
+
+    // TODO: requires(ContainerType a) or // template <template <typename... Args> class Container, typename, typename... Types>
+
+    template <typename T>
+    static std::string concatWithSeparator(const T& c, std::string_view separator)
+    {
+        std::string result;
+        for (auto it = c.begin(); it != c.end(); ++it)
+        {
+            result += delegateToString(*it);
+            if (std::next(it) != c.end())
+            {
+                result += separator;
+            }
+        }
+        return result;
+    }
+
+private:
+    // delegate to "to_string" as needed, arithmetic should cover int/float types
+    template <class T>
+        requires std::is_arithmetic_v<T>
+    static std::string delegateToString(const T& t)
+    {
+        return std::to_string(t);
+    }
+    //implicit conversion
+    template <class T>
+        requires(! std::is_fundamental_v<T>)
+    static std::string delegateToString(const T& s)
+    {
+        return (s);
+    }
 };

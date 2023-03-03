@@ -1,7 +1,7 @@
 #include "FindEntityVisitor.h"
 
 #include <entities/BaseEntity.h>
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <algorithm>
 #include <ranges>
 #include <string_view>
@@ -48,7 +48,7 @@ void msge::FindEntityVisitor::visit(DynamicEntity& entity)
     visit((BaseEntity&)entity);
 }
 
-void msge::FindEntityVisitor::visit(CompoundEntity& entity)
+void msge::FindEntityVisitor::visit(DynamicCompoundEntity& entity)
 {
     visit((BaseEntity&)entity);
     if (!traversalStopped)
@@ -62,9 +62,6 @@ void msge::FindEntityVisitor::visit(StaticEntity& entity)
     visit((BaseEntity&)entity);
 }
 
-void msge::FindEntityVisitor::finish()
-{
-}
 
 void msge::FindEntityVisitor::initializeNameStack(std::string_view name)
 {

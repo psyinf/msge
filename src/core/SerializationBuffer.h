@@ -1,5 +1,5 @@
 #pragma once
-#include "strings/FixedString.h"
+#include "strings/FixedLengthString.h"
 
 #include <array>
 #include <iostream>

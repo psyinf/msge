@@ -1,4 +1,4 @@
-#include <entities/CompoundEntity.h>
+#include <entities/DynamicCompoundEntity.h>
 #include <entities/StaticEntity.h>
 #include <gtest/gtest.h>
 #include <visitors/FindEntityVisitor.h>
@@ -11,7 +11,7 @@ auto makeStaticEntity(std::string_view name)
 
 auto makeGroup(std::string_view name)
 {
-    return std::make_shared<msge::CompoundEntity>(name, "t1");
+    return std::make_shared<msge::DynamicCompoundEntity>(name, "t1");
 }
 
 auto makeScene1()
@@ -90,7 +90,7 @@ TEST(FindVisitor, empty)
     ASSERT_FALSE(result.has_value());
 
     f.reset("g.a2.b3.c1");
-    std::make_shared<msge::CompoundEntity>()->accept(f);
+    std::make_shared<msge::DynamicCompoundEntity>()->accept(f);
     
     auto result2 = f.getResult();
     ASSERT_FALSE(result2.has_value());

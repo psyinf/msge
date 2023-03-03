@@ -1,41 +1,80 @@
 #pragma once
-#include <visitors/BaseEntityVisitor.h>
 #include <CoreDefinitions.h>
 #include <FrameStamp.h>
-#include <math/Spatial.h>
 #include <array>
+#include <string>
+#include <math/Spatial.h>
+#include <serializers/StateJsonSerializer.h>
+#include <visitors/BaseEntityVisitor.h>
 
 
 namespace msge
 {
-
-/**
- * Base for entities. No spatial properties. 
- * #TODO maybe make virtual base class.
- */
-class BaseEntity
+template <class T>
+class VisitorInterface
 {
 public:
-    explicit BaseEntity(const EntityId& id, const TypeId& type)
+    ~VisitorInterface() = default;
+    /*
+    Implement to accept the Visitor
+    */
+    virtual void accept(T& bev) = 0;
+    /*
+    Implement to traverse potential children
+    */
+    virtual void traverse(T& bev) = 0;
+};
+/**
+ * Interface to have a tagged Type
+ */
+class TaggedType
+{
+    virtual TypeId getTaggedType() const = 0;
+};
+
+
+class BaseEntity : public VisitorInterface<BaseEntityVisitor>, public TaggedType
+{
+public:
+    explicit BaseEntity(const EntityId& id, const TypeId& type_id)
         : id{id}
-        , type{type}
+        , type{type_id}
     {
     }
 
-    virtual void accept(BaseEntityVisitor& bev)
+    void accept(BaseEntityVisitor& bev) override
     {
         bev.visit(*this);
     }
-    virtual void traverse(BaseEntityVisitor& bev) 
+
+    void traverse(BaseEntityVisitor& bev) override
     {
-        //implement for grouping entities
+        //to be implemented for structured entities
     }
+
+    virtual void load(const JsonType& json)
+    {
+        entityState = std::make_shared<EntityState>(json["state"]);
+    }
+
+    virtual void save(JsonType& json) const
+    {
+        json["id"]  = id;
+        json["state"] = *entityState;
+        json["type"]  = type;
+        json["tag"]   = getTaggedType();
+    }
+    
+
+    TypeId getTaggedType() const override { return "Base"; }
 
     virtual ~BaseEntity() = default;
 
     BaseEntity() = default;
 
-    const EntityId id;
-    const TypeId   type;
+    std::shared_ptr<EntityState> entityState;
+    const EntityId               id;
+    const TypeId                 type;
+    
 };
 } // namespace msge

@@ -1,6 +1,6 @@
 #pragma once
 #include <entities/BaseEntity.h>
-
+#include <serializers/SpatialJsonSerializer.h>
 namespace msge
 {
 /**
@@ -16,5 +16,19 @@ public:
     }
 
     common::math::Spatial spatial;
+
+    void load(const JsonType& json) override
+    {
+        BaseEntity::load(json);
+        spatial = json["spatial"];
+    }
+
+    void save(JsonType& json) const override
+    {
+        BaseEntity::save(json);
+        json["spatial"] = spatial;
+    }
+    TypeId getTaggedType() const override { return "Static"; }
+   
 };
 } // namespace msge
