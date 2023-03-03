@@ -37,7 +37,7 @@ using namespace msge;
 void saveScene(msge::BaseScene& scene)
 {
 
-    auto                        filename = "data/test_out2.json";
+    auto                        filename = "data/x.json";
     std::ofstream               os(filename);
     auto          scene_json   = nlohmann::json::object();
     auto                        entites = nlohmann::json::array();
@@ -51,8 +51,9 @@ void saveScene(msge::BaseScene& scene)
        
         item.get().save(entity);
         auto data = nlohmann::json::object();
-        entity["id"] = name;
+  
         data["entity"] = entity;
+        data["q_id"]    = name;
         entites.push_back(data);
         
     });

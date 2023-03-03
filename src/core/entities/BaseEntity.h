@@ -2,6 +2,7 @@
 #include <CoreDefinitions.h>
 #include <FrameStamp.h>
 #include <array>
+#include <string>
 #include <math/Spatial.h>
 #include <serializers/StateJsonSerializer.h>
 #include <visitors/BaseEntityVisitor.h>
@@ -35,9 +36,9 @@ class TaggedType
 class BaseEntity : public VisitorInterface<BaseEntityVisitor>, public TaggedType
 {
 public:
-    explicit BaseEntity(const EntityId& id)
+    explicit BaseEntity(const EntityId& id, const TypeId& type_id)
         : id{id}
-        , type{type}
+        , type{type_id}
     {
     }
 
@@ -53,11 +54,12 @@ public:
 
     virtual void load(const JsonType& json)
     {
-        *entityState = json["state"];
+        entityState = std::make_shared<EntityState>(json["state"]);
     }
 
     virtual void save(JsonType& json) const
     {
+        json["id"]  = id;
         json["state"] = *entityState;
         json["type"]  = type;
         json["tag"]   = getTaggedType();

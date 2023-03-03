@@ -30,13 +30,20 @@ inline void from_json(const nlohmann::json& j, Quatd& q)
 template <typename DATA_TYPE, typename ROTATION_ORDER>
 inline void to_json(nlohmann::json& j, const EulerAngle < DATA_TYPE, ROTATION_ORDER> &e)
 {
-    //TODO: reinterpret as array
-    j = nlohmann::json::array({*e.getData()});
+    j = nlohmann::json(std::span(e.getData(),3));
 }
 template <typename DATA_TYPE, typename ROTATION_ORDER>
 inline void from_json(const nlohmann::json& j, EulerAngle<DATA_TYPE, ROTATION_ORDER>& e)
 {
-    j.get_to(*e.getData());
+    //TODO: eliminate copy by directly serializing into the span
+    auto rot_data_span = std::span(e.getData(), 3);
+    auto a = j.get<std::array<DATA_TYPE,3>>();
+    rot_data_span[0]   = a[0];
+    rot_data_span[1]   = a[1];
+    rot_data_span[2]   = a[2];
+
+
+    
 }
 
 }

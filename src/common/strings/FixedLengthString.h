@@ -6,32 +6,36 @@
 #include <ranges>
 #include <stdexcept>
 #include <string>
+
+namespace common
+{
+
 /**
  * String-like interface to an fixed length identifier. The \0 character is not included if the input is either only the \0 character or uses up the capacity
  * TODO: interop between different sizes.
  */
 template <size_t LENGTH>
-class FixedString
+class FixedLengthString
 {
     static_assert(LENGTH > 0, "Must use a non-zero value for length");
 
 public:
-    FixedString()
+    FixedLengthString()
     {
         content[0] = '\0';
     }
 
-    FixedString(const FixedString& rhs)
+    FixedLengthString(const FixedLengthString& rhs)
     {
         std::ranges::copy(rhs.content, content.begin());
         content_view = normalize(std::string_view(content));
     }
 
-    explicit(false) FixedString(std::string_view s)
+    explicit(false) FixedLengthString(std::string_view s)
     {
         if (s.length() > LENGTH)
         {
-            throw std::out_of_range(fmt::format("{} too long for FixedString<{}>", s, LENGTH));
+            throw std::out_of_range(fmt::format("{} too long for FixedLength<{}>", s, LENGTH));
         }
         auto length_to_consider = std::min(s.find_first_of('\0'), s.length());
 
@@ -42,11 +46,11 @@ public:
         content_view = std::string_view(content.data(), length_to_consider);
     }
 
-    explicit(false) FixedString(const std::string& s)
-        : FixedString(std::string_view(s)){};
+    explicit(false) FixedLengthString(const std::string& s)
+        : FixedLengthString(std::string_view(s)){};
 
-    explicit(false) FixedString(const char* const s)
-        : FixedString(std::string_view(s)){};
+    explicit(false) FixedLengthString(const char* const s)
+        : FixedLengthString(std::string_view(s)){};
 
     explicit(false) operator std::string() const { return std::string(content_view); }
 
@@ -92,13 +96,15 @@ private:
  * We need to specialize this to avoid char* comparison to be induced
  */
 template <size_t L>
-bool operator==(const FixedString<L>& lhs, const FixedString<L>& rhs)
+bool operator==(const FixedLengthString<L>& lhs, const FixedLengthString<L>& rhs)
 {
     return std::string_view(lhs) == std::string_view(rhs);
 }
 
 template <size_t L>
-auto operator<=>(const FixedString<L>& lhs, const FixedString<L>& rhs)
+auto operator<=>(const FixedLengthString<L>& lhs, const FixedLengthString<L>& rhs)
 {
     return lhs <=> std::string_view(rhs);
 }
+
+} // namespace common

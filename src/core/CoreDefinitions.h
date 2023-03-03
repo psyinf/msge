@@ -5,16 +5,16 @@
 #include <ranges>
 #include <stack>
 #include <string_view>
-#include <strings/FixedString.h>
+#include <strings/FixedLengthString.h>
 #include <strings/StringTools.h>
 
 namespace msge
 {
 
-using EntityId = FixedString<64>;
-using TypeId   = FixedString<64>;
+using EntityId = common::FixedLengthString<64>;
+using TypeId   = common::FixedLengthString<64>;
 
-using SceneId = FixedString<256>;
+using SceneId = common::FixedLengthString<256>;
 
 using JsonType = nlohmann::json;
 
